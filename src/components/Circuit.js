@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Nav, Sidenav, Dropdown, NavBar, Icon, Tag, TagGroup } from 'rsuite' 
 import Table from './Table'
+import Map from './Map'
 // import Adelaide from './assets/circuitMaps/adelaide.svg'
 
 const Circuit = ( { match } ) => {
   const [circuit, setCircuit] = useState({
     circuitId: '',
     circuitName: '',
-    Location: {},
+    Location: {
+      lat: 0,
+      long: 0
+    },
     url: ''
   })
 
@@ -17,6 +21,14 @@ const Circuit = ( { match } ) => {
     raceName: '',
     round: '',
     season: '',
+  })
+
+  const [mapConfig, setMapConfig] = useState({
+      height: '400px',
+      width: '800px',
+      zoom: 10,
+      latitude: 0,
+      longitude: 0,
   })
 
   const [flag, setFlag] = useState([])
@@ -59,6 +71,13 @@ const Circuit = ( { match } ) => {
     // console.log('circuit ', circuit.Location.country)
   }, [loading])
 
+  useEffect(() => {
+    const updatedMapConfig = {...mapConfig}
+    updatedMapConfig.latitude = Number(circuit.Location.lat)
+    updatedMapConfig.longitude = Number(circuit.Location.long)
+    console.log(updatedMapConfig)
+    setMapConfig(updatedMapConfig)
+  }, [circuit])
 
   function fetchRace(year) {
     fetch(`http://ergast.com/api/f1/${year}/circuits/${circuit.circuitId}/results.json`)
@@ -100,9 +119,7 @@ const Circuit = ( { match } ) => {
         // console.log(raceResults)
         setRaceInfo(race)
         setResults(raceResults)
-
       }
-
     })
     // http://ergast.com/api/f1/${year}/circuits/{$.circuit.circuitId}/results.json
   }
@@ -116,10 +133,11 @@ const Circuit = ( { match } ) => {
   }
 
   let table;
-  
+
   if (results.length > 0) {
     table = <Table data={results}/>
   }
+  
 
   return <div className={'page-background'}>
     <div className={'container'}>
@@ -132,6 +150,10 @@ const Circuit = ( { match } ) => {
             <img width='400' height='200' style={ {backgroundColor: 'grey'} } src={``}></img>
           </div>
           <img width='200' className='circuit-flag' src={flag}></img>
+        </div>
+
+        <div className='map-container'>
+          <Map config={mapConfig}/>
         </div>
 
         <div className='tag-container'>

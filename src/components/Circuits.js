@@ -83,7 +83,6 @@ const Circuits = () => {
     latitude: 51.515,
     longitude: -0.078
   }
-  
 
   let body = ''
 

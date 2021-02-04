@@ -17,7 +17,7 @@ const Map = (props) => {
   let markers = ''
 
   if (props.data) {
-    props.data.map((circuit, i) => {
+    markers = props.data.map((circuit, i) => {
       const latLong = {
         lat: Number(circuit.Location.lat),
         long: Number(circuit.Location.long)
