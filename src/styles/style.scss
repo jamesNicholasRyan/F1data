@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Work+Sans:wght@300;400;500;700&display=swap');
+
+body * {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', 'Work Sans', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+  margin-bottom: 30px;
+}
+
+h1 {
+  font-size: 40px;
+  font-weight: lighter;
+}
+
+h3 {
+  font-size: 24px;
+  font-weight: lighter;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.navBar {
+  height: 80px;
+  // margin-bottom: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(50,190,190);
+}
+
+.navItem {
+  font-size: 25px;
+  color: white;
+  list-style-type: none;
+  text-decoration: none;
+  margin: 5px 50px;
+}
+
+#map-container {
+  width: 800px;
+  height: 600px;
+}
+
+#map-container canvas:focus{
+  outline: none;
+}
+
+.circuitCard {
+  border: 2px solid grey;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 2px;
+}
+
+.infoContainer {
+  // height: 300px;
+  // border: 2px solid grey;
+}
+
+// .yearCard {
+//   border: 2px solid grey;
+//   border-radius: 3px;
+//   padding: 5px;
+//   margin: 2px;
+// }
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 1200px;
+  margin: 0 auto;
+
+}
+
+.container-left-column {
+  flex-grow: 6;
+  margin: 10px;
+}
+
+.container-right-column {
+  flex-grow: 1;
+}
+
+.circuitInfo {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+}
+
+.circuit-info-text {
+  // border: 2px solid;
+  flex-grow: 4;
+}
+
+.circuit-flag {
+  flex-grow: 2;
+  margin-right: 150px;
+}
+
+table > thead > tr > th:first-child{
+  width: 100px;
+}
+
+th {
+  text-align: left;
+  font-weight: bold;
+}
+
+tr > th,
+tr > td {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.markerInner {
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.markerInner p {
+  margin-bottom: 0;
+}
+
+.search-container {
+  display: flex;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: 150px;
+  z-index: 1000;
+  width: 400px;
+}
+
+.year-select,
+.search-input-container {
+  background-color: #fff;
+  padding: 15px;
+  box-shadow: 2px 2px 1px rgb(0,0,0,0.1);
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.search-input-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-input {
+  border: none;
+  width: 300px;
+}
