@@ -23,18 +23,12 @@ const Circuit = ( { match } ) => {
     season: '',
   })
 
-  const [mapConfig, setMapConfig] = useState({
-      height: '400px',
-      width: '800px',
-      zoom: 10,
-      latitude: 0,
-      longitude: 0,
-  })
+  const [mapConfig, setMapConfig] = useState({})
 
   const [flag, setFlag] = useState([])
   const [seasonList, setSeasonList] = useState([])
   const [results, setResults] = useState([])
-  const [map, setMap] = useState('')
+  // const [map, setMap] = useState('')
 
   const [loading, setLoading] = useState(true)
   const circuitName = match.params.id
@@ -72,10 +66,13 @@ const Circuit = ( { match } ) => {
   }, [loading])
 
   useEffect(() => {
-    const updatedMapConfig = {...mapConfig}
+    const updatedMapConfig = {
+      height: '400px',
+      width: '800px',
+      zoom: 13,
+    }
     updatedMapConfig.latitude = Number(circuit.Location.lat)
     updatedMapConfig.longitude = Number(circuit.Location.long)
-    console.log(updatedMapConfig)
     setMapConfig(updatedMapConfig)
   }, [circuit])
 
@@ -113,7 +110,6 @@ const Circuit = ( { match } ) => {
             grid: result.grid,
             positionChange: positionChange,
             changeArrow: changeArrow,
-            // color: 'green'
           }
         })
         // console.log(raceResults)
@@ -137,7 +133,14 @@ const Circuit = ( { match } ) => {
   if (results.length > 0) {
     table = <Table data={results}/>
   }
-  
+
+  let map;
+
+  if (mapConfig.latitude) {
+    map = <div className='map-container'>
+      <Map config={mapConfig}/>
+    </div>
+  }
 
   return <div className={'page-background'}>
     <div className={'container'}>
@@ -152,9 +155,7 @@ const Circuit = ( { match } ) => {
           <img width='200' className='circuit-flag' src={flag}></img>
         </div>
 
-        <div className='map-container'>
-          <Map config={mapConfig}/>
-        </div>
+      {map}
 
         <div className='tag-container'>
           <div className='tag-group'>
