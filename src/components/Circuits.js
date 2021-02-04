@@ -10,7 +10,7 @@ const Circuits = () => {
   const [filterYear, setFilterYear] = useState('yyyy')
   const [filterName, setFilterName] = useState('')
   const [activeYears, setActiveYears] = useState([])
-  const [showMap, setShowMap] = useState(false)
+  const [showMap, setShowMap] = useState(true)
 
   useEffect(() => {
     fetch('https://ergast.com/api/f1/circuits.json?limit=78')
@@ -76,11 +76,20 @@ const Circuits = () => {
     </div>
   </div> 
 
+  const mapConfig = {
+    height: '100vh',
+    width: '100vw',
+    zoom: 4.5,
+    latitude: 51.515,
+    longitude: -0.078
+  }
+  
+
   let body = ''
 
   if (showMap) {
     body = <div id={'map-container'}>
-      <Map data={circuits}/>
+      <Map config={mapConfig} data={circuits}/>
     </div>
   } else {
     body = <div className={'card-container'}>
