@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Nav, Sidenav, Dropdown, NavBar, Icon } from 'rsuite'
+import { Nav, Sidenav, Dropdown, NavBar, Icon, Tag, TagGroup } from 'rsuite' 
 import Table from './Table'
+// import Adelaide from './assets/circuitMaps/adelaide.svg'
 
 const Circuit = ( { match } ) => {
   const [circuit, setCircuit] = useState({
@@ -120,63 +121,77 @@ const Circuit = ( { match } ) => {
     table = <Table data={results}/>
   }
 
-  return <div className={'container'}>
-    <div className={'container-left-column'}>
-      <div className='circuitInfo'>
-        <div className='circuit-info-text'>
-          <h1><a href={circuit.url} target='_blank'>{circuit.circuitName}</a></h1>
-          <div>{circuit.Location.locality} - {circuit.Location.country}</div>
-          <img className='map' src={`./assets/circuitMaps/aintree.svg`}></img>
+  return <div className={'page-background'}>
+    <div className={'container'}>
+
+      <div className={'container-left-column'}>
+        <div className={'circuitInfo'}>
+          <div className={'circuit-info-text'}>
+            <h1><a href={circuit.url} target='_blank'>{circuit.circuitName}</a></h1>
+            <div>{circuit.Location.locality} - {circuit.Location.country}</div>
+            <img width='400' height='200' style={ {backgroundColor: 'grey'} } src={``}></img>
+          </div>
+          <img width='200' className='circuit-flag' src={flag}></img>
         </div>
-        <img width='200' className='circuit-flag' src={flag}></img>
-      </div>
 
-     {/* --------------------------- RESULTS TABLE HERE ------------------------------------ */}
-      <div className='infoContainer'>            
-        {raceInfoJSX}
-
-        {table}
-
-      </div>
-      
-    </div>
-    <aside className={'container-right-column'}>
-      <SideBar 
-        seasonList={seasonList}
-        fetchRace={fetchRace}
-      /> 
-    </aside>
-      
-      
-
-    </div>
-}
-
-function SideBar( { seasonList, fetchRace } ) {
-  {/* ---------------------------  YEARS ASIDE -------------------------------------- */}
-  return <div>
-  <Sidenav defaultOpenKeys={['3', '4']} activeKey="1">
-      <Sidenav.Body>
-        <Nav style={bodyStyles}>
-          <Nav.Item 
-            eventKey="1"
-            icon={<Icon icon="dashboard" />}
-            style={headerStyles}
-            active
-            >
-              SEASON:
-          </Nav.Item>
+        <div className='tag-container'>
+          <div className='tag-group'>
             {seasonList.map((season) => {
-              return <Nav.Item key={season.season} style={panelStyles} onClick={(event) => {fetchRace(event.target.innerText)}}>
-                  <div>{season.season}</div>
-                </Nav.Item>
+              return <div className='tag' key={season.season} color="blue" onClick={(event) => {fetchRace(event.target.innerText)}}>
+                  {/* <div>{season.season}</div> */}
+                  <span className='year-text'>{season.season}</span>
+                </div>
             })}
-          <Nav.Item style={panelStyles}></Nav.Item>
-        </Nav>
-      </Sidenav.Body>
-    </Sidenav>
+          </div>
+        </div>
+
+      {/* --------------------------- RESULTS TABLE HERE ------------------------------------ */}
+        <div className='info-container'>  
+          <div className='table-container'>
+            {raceInfoJSX}
+
+            {table}
+          </div>          
+        </div>
+        
+      </div>
+      {/* <aside className={'container-right-column'}>
+        <SideBar 
+          seasonList={seasonList}
+          fetchRace={fetchRace}
+        /> 
+      </aside> */}
+        
+      
+      </div>
   </div>
+  
 }
+
+// function SideBar( { seasonList, fetchRace } ) {
+//   {/* ---------------------------  YEARS ASIDE -------------------------------------- */}
+//   return <div>
+//   <Sidenav defaultOpenKeys={['3', '4']} activeKey="1">
+//       <Sidenav.Body>
+//         <Nav style={bodyStyles}>
+//           <Nav.Item 
+//             eventKey="1"
+//             icon={<Icon icon="dashboard" />}
+//             style={headerStyles}
+//             active
+//             >
+//               SEASON:
+//           </Nav.Item >
+//             {seasonList.map((season) => {
+//               return <Nav.Item key={season.season} style={panelStyles} onClick={(event) => {fetchRace(event.target.innerText)}}>
+//                   <div>{season.season}</div>
+//                 </Nav.Item>
+//             })}
+//         </Nav>
+//       </Sidenav.Body>
+//     </Sidenav>
+//   </div>
+// }
 
 const headerStyles = {
   padding: 20,

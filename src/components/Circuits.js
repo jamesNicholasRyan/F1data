@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Map from './Map'
 
+import LocationIcon from '../location-icon.png'
+import Table from './Table'
+
 const Circuits = () => {
   const [circuits, setCircuits] = useState([])
   const [filterYear, setFilterYear] = useState('yyyy')
   const [filterName, setFilterName] = useState('')
   const [activeYears, setActiveYears] = useState([])
-  const [showMap, setShowMap] = useState(true)
+  const [showMap, setShowMap] = useState(false)
 
   useEffect(() => {
     fetch('https://ergast.com/api/f1/circuits.json?limit=78')
@@ -29,7 +32,6 @@ const Circuits = () => {
     fetch('http://ergast.com/api/f1/seasons.json?limit=100')
       .then((resp) => resp.json())
       .then((seasonsData) => {
-        // console.log(seasonsData.MRData.SeasonTable.Seasons)
         const years = seasonsData.MRData.SeasonTable.Seasons.map(season => {
           return season.season
         })
@@ -52,11 +54,59 @@ const Circuits = () => {
     value={filterYear}
     onChange={event => setFilterYear(event.target.value)}  
     >
-      <option key={'empty'} selected disabled value={'yyyy'}>Select Year</option>
+      <option key={'empty'} disabled value={'yyyy'}>Select Year</option>
     {activeYears.map(year => {
       return <option key={year} value={year}>{year}</option>
     })}
   </select>
+
+
+  const mapToggleButton = <div className={'view-toggle'}>
+    <div>
+      <span 
+        className="material-icons"
+        style={ showMap === false ? { color: 'grey' } : { color: 'black' }}
+        onClick={() => setShowMap(true)}>language</span>
+    </div>
+    <div>
+      <span 
+        className="material-icons"
+        style={ showMap === false ? { color: 'black' } : { color: 'grey' }}
+        onClick={() => setShowMap(false)}>view_module</span>
+    </div>
+  </div> 
+
+  let body = ''
+
+  if (showMap) {
+    body = <div id={'map-container'}>
+      <Map data={circuits}/>
+    </div>
+  } else {
+    body = <div className={'card-container'}>
+      {filterCircuitsByName().map((circuit) => {
+        return <div className={'card-outer'}><Link 
+          key={circuit.circuitId} 
+          to={{
+            pathname: `/circuits/${circuit.circuitId}`,
+          }}
+          >
+            <div className='circuit-card'>
+              <div className={'circuit-card-image'}>
+
+              </div>
+              <div className={'circuit-card-info'}>
+                <h4>{circuit.circuitName}</h4>
+              </div>
+              
+            </div>
+        </Link></div>
+      })}
+    </div>
+    
+  
+  }
+
 
   return <div>
 
@@ -80,32 +130,14 @@ const Circuits = () => {
           }}
           value={filterName}
         />
-        <span>()</span>
+        <span className="material-icons">search</span>
       </div>
       
-
-      {/* <button onClick={filterCircuits}>SEARCH</button> */}
-
     </div>
 
-    
+    {mapToggleButton}
 
-    <div id={'map-container'}>
-      <Map data={circuits}/>
-    </div>
-
-    {filterCircuitsByName().map((circuit) => {
-      return <Link 
-        key={circuit.circuitId} 
-        to={{
-          pathname: `/circuits/${circuit.circuitId}`,
-        }}
-        >
-          <div className='circuitCard'>
-          {circuit.circuitName}
-        </div>
-      </Link>
-    })}
+    {body}
     
   </div>
 

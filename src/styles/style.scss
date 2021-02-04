@@ -58,56 +58,118 @@ a:hover {
   outline: none;
 }
 
-.circuitCard {
-  border: 2px solid grey;
-  border-radius: 3px;
-  padding: 5px;
-  margin: 2px;
+.info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
 }
 
-.infoContainer {
-  // height: 300px;
+.table-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   // border: 2px solid grey;
+  // background-color: rgb(255, 255, 255, 0.3);
+  border-radius: 20px;
+  width: 900px;
 }
 
-// .yearCard {
-//   border: 2px solid grey;
-//   border-radius: 3px;
-//   padding: 5px;
-//   margin: 2px;
-// }
+.page-background {
+  display: flex;
+  justify-content: center;
+  // position: absolute;
+  z-index: -1;
+  // width: 10000px;
+  height: 2000px;
+  background-image: linear-gradient(rgb(189, 211, 211), rgb(202, 202, 202));
+  // background-color: rgb(166, 233, 255);
+}
 
 .container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: center;
   width: 1200px;
-  margin: 0 auto;
-
+  margin: 50px auto;
 }
 
 .container-left-column {
-  flex-grow: 6;
+
   margin: 10px;
+  width: 1000px;
 }
 
 .container-right-column {
-  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 250px;
 }
 
 .circuitInfo {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  margin: 0px auto;
   margin-bottom: 50px;
+  width: 800px;
 }
 
 .circuit-info-text {
   // border: 2px solid;
-  flex-grow: 4;
+  flex-grow: 3;
 }
 
 .circuit-flag {
+  // height: 250px;
+  width: 100px;
+  background-size: auto;
   flex-grow: 2;
-  margin-right: 150px;
+  margin: auto 0px;
+  margin-top: 100px;
+  box-shadow: 2px 2px 1px rgb(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+.tag-container {
+  display: flex;
+  justify-content: center;
+  // height: 200px;
+  // border: 1px solid;
+  margin-bottom: 30px;
+}
+
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  // border: 1px solid blue;
+  width: 1000px;
+}
+
+.tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // text-align: center;
+  color: white;
+  background-color: rgb(50, 190, 190);
+  width: 80px;
+  height: 30px;
+  margin: 5px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 1px rgb(0,0,0,0.1);
+}
+
+.tag:hover {
+  background-color: rgb(4, 246, 246);
+  cursor: pointer;
 }
 
 table > thead > tr > th:first-child{
@@ -142,8 +204,8 @@ tr > td {
   right: 0;
   margin-left: auto;
   margin-right: auto;
-  top: 150px;
-  z-index: 1000;
+  top: 100px;
+  z-index: 100;
   width: 400px;
 }
 
@@ -166,3 +228,51 @@ tr > td {
   border: none;
   width: 300px;
 }
+
+.view-toggle {
+  position: absolute;
+  right: 40px;
+  top: 100px;
+  z-index: 100;
+}
+
+.view-toggle .material-icons {
+  cursor: pointer;
+  font-size: 40px;
+  padding: 5px;
+  background-color: #fff;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.card-container {
+  margin: 100px auto;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1280px;
+  // justify-content: space-between;
+}
+
+.card-outer {
+  flex-basis: 24%;
+}
+
+.circuit-card {
+  border-radius: 3px;
+  margin: 5px;
+  box-shadow: 2px 2px rgb(0,0,0,0.01);
+}
+
+.circuit-card-image {
+  height: 200px;
+  background-color: #ececec;
+}
+
+.circuit-card-info {
+  padding: 16px;
+}
+
+.circuit-card-info h4 {
+  font-size: 18px;
+}
+

@@ -54,12 +54,10 @@ const Table = (props) => {
   ] 
 
   const columns = config.map((column, i) => {
-
     const style = {
       width: column.width
     }
-
-    return <th key={i} style={style}>{column.header}</th>
+    return <th className='tablecontents' key={i} style={style}>{column.header}</th>
   })
 
   const rows = props.data.map(rowData => {
@@ -77,7 +75,7 @@ const Table = (props) => {
         color = 'white'
       }
 
-      return <td key={i} style={{ borderRadius: '3', backgroundColor: color }}>{rowData[cell]}</td>
+      return <td className='tablecontents' key={i} style={{ borderRadius: '3', backgroundColor: color }}>{rowData[cell]}</td>
     })
     return <tr>
       {rowCells}
