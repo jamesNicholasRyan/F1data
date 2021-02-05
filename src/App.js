@@ -12,9 +12,9 @@ const App = () => (
     <Nav />
 
     <Switch>
-      <Route exact path="/circuits/:id" component={Circuit}/>
-      <Route exact path="/circuits" component={Circuits}/>
-      <Route exact path="/" component={Home}/>
+      <Route exact path="F1data/circuits/:id" component={Circuit}/>
+      <Route exact path="F1data/circuits" component={Circuits}/>
+      <Route exact path="F1data/" component={Home}/>
     </Switch>
   </BrowserRouter>
 )
