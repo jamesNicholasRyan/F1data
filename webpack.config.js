@@ -25,8 +25,11 @@ module.exports = webpackEnv => {
         { test: /\.css$/, use: ['style-loader', 'css-loader'] },
         { test: /\.s(a|c)ss$/, use: ['style-loader', 'css-loader', 'sass-loader'] },
         { test: /\.less$/i, loader: "less-loader" },
-        { test: /\.(png|jpe?g|gif)$/i, use: 'file-loader' }
-        // { test: /\.svg$/, use: 'svg-url-loader'}
+        { test: /\.(png|jpe?g|gif)$/i, use: 'file-loader' },
+        // { test: /\.svg$/, use: ['babel-loader', '@svgr/webpack'] },
+        { test: /\.svg$/, use: ['babel-loader', '@svgr/webpack', 'file-loader']}
+        // { test: /\.svg$/, use: 'svg-url-loader'},
+        // { test: /\.svg$/, use: 'svg-loader'}
         // {
         //   test: /\.(png|svg|jpg|jpeg|gif)$/i,
         //   type: 'asset/resource',

@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom'
 
 const Map = (props) => {
 
-  const [viewPort, updateViewPort] = useState(props.config)
-
+  const [viewPort, setViewPort] = useState(props.config)
+  const [markerData, setMarkerData] = useState([])
 
   const markerLabelStyle = {
     display: 'block',
@@ -16,17 +16,30 @@ const Map = (props) => {
 
   let markers = ''
 
+
+  useEffect(() => {
+    setMarkerData(props.data)
+  }, [viewPort])
+
   if (props.data) {
     markers = props.data.map((circuit, i) => {
       const latLong = {
         lat: Number(circuit.Location.lat),
         long: Number(circuit.Location.long)
       }
+
+      // console.log('--marker--')
+      // console.log({
+      //   lat: latLong.lat,
+      //   long: latLong.long,
+      //   name: circuit.circuitName,
+      //   id: circuit.circuitId
+      // })
   
       return <Marker key={i} latitude={latLong.lat} longitude={latLong.long}>
         <Link to={`/circuits/${circuit.circuitId}`}>
           <div className={'markerInner'}>
-            <p style={markerLabelStyle}>{circuit.circuitName}</p>
+            <p id={circuit.circuitId} style={markerLabelStyle}>{circuit.circuitName}</p>
           </div>
         </Link>
       </Marker>
@@ -35,7 +48,7 @@ const Map = (props) => {
 
   return <MapGL
     { ...viewPort }
-    onViewportChange={(viewPort) => updateViewPort(viewPort)}
+    onViewportChange={(viewPort) => setViewPort(viewPort)}
     mapboxApiAccessToken={process.env.MAPBOX_TOKEN}
     mapStyle="mapbox://styles/mapbox/dark-v9"
   >

@@ -6,6 +6,7 @@ body * {
 
 body {
   font-family: 'Roboto', 'Work Sans', sans-serif;
+  background-color: rgb(0,0,0,0.025)
 }
 
 h1,h2,h3,h4,h5,h6,p {
@@ -15,6 +16,7 @@ h1,h2,h3,h4,h5,h6,p {
 h1 {
   font-size: 40px;
   font-weight: lighter;
+  color: #32bebe;
 }
 
 h3 {
@@ -31,22 +33,55 @@ a:hover {
   text-decoration: underline;
 }
 
+h1 a {
+  color: #32bebe;
+}
+
 .navBar {
-  height: 80px;
+  height: 70px;
   // margin-bottom: 30px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  background-color: rgb(50,190,190);
+  background-color: #fff;
+}
+
+.logo-container {
+  margin-left: 25px;
+}
+
+.logo-container img {
+  // position: relative;
+  // top: 15px;
+  height: 60px;
+  // overflow-y: hidden;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
 }
 
 .navItem {
-  font-size: 25px;
-  color: white;
+  font-size: 16px;
+  color: #32bebe;
   list-style-type: none;
   text-decoration: none;
-  margin: 5px 50px;
+  margin: 5px 25px;
+}
+
+.home-image {
+  width: 100%;
+}
+
+.welcome-message {
+  position: fixed;
+  left: 45%;
+  top: 30%;
+  z-index: 3;
+  font-size: 40px;
+  color: white;
 }
 
 #map-container {
@@ -63,11 +98,12 @@ a:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
 }
 
 .map-container {
-  
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
 .table-container {
@@ -81,14 +117,29 @@ a:hover {
   width: 900px;
 }
 
+.pie-container {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.toolTip {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
 .page-background {
   display: flex;
   justify-content: center;
   // position: absolute;
   z-index: -1;
   // width: 10000px;
-  height: 2000px;
-  background-image: linear-gradient(rgb(189, 211, 211), rgb(202, 202, 202));
+  height: 3000px;
+  // background-image: linear-gradient(rgb(189, 211, 211), rgb(202, 202, 202));
   // background-color: rgb(166, 233, 255);
 }
 
@@ -102,7 +153,10 @@ a:hover {
 }
 
 .container-left-column {
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin: 10px;
   width: 1000px;
 }
@@ -154,7 +208,7 @@ a:hover {
   justify-content: center;
   align-items: center;
   // border: 1px solid blue;
-  width: 1000px;
+  width: 850px;
 }
 
 .tag {
@@ -233,6 +287,10 @@ tr > td {
   width: 300px;
 }
 
+.search-input-container span {
+  color: #32bebe;
+}
+
 .view-toggle {
   position: absolute;
   right: 40px;
@@ -274,6 +332,7 @@ tr > td {
 
 .circuit-card-info {
   padding: 16px;
+  background-color: #fff;
 }
 
 .circuit-card-info h4 {

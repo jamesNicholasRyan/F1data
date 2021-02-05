@@ -2,9 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { Nav, Sidenav, Dropdown, NavBar, Icon, Tag, TagGroup } from 'rsuite' 
 import Table from './Table'
 import Map from './Map'
-// import Adelaide from './assets/circuitMaps/adelaide.svg'
+import { RadialChart, VerticalBarSeries, XYPlot, XAxis, YAxis } from 'react-vis'
+// import Adelaide from '../assets/circuitMaps/adelaide.svg'
+// import Riverside from '../assets/circuitMaps/riverside.svg'
+
+// function importAll(r) {
+//   return r.keys().map(r)
+// }
+// const images = importAll(require.context('../assets/circuitMaps/', false, /\.(png|jpe?g|svg)$/));
+// console.log('image: ', images)
 
 const Circuit = ( { match } ) => {
+
+  // console.log('adelaide: ', Adelaide)
+  // console.log(Riverside)
   const [circuit, setCircuit] = useState({
     circuitId: '',
     circuitName: '',
@@ -31,9 +42,17 @@ const Circuit = ( { match } ) => {
   // const [map, setMap] = useState('')
 
   const [loading, setLoading] = useState(true)
+  const [pieData, setPieData] = useState([])
+  const [isTooltipShown, updateTooltip] = useState(false)
+  const [isPieChart, updateisPieChart] = useState(false)
+  const [nationality, setNationalilty] = useState('')
+  const [flags, setFlags] = useState([])
+
   const circuitName = match.params.id
+  const allCountries = []
 
   useEffect(() => {
+    
     fetch(`http://ergast.com/api/f1/circuits/${match.params.id}.json`)
       .then(resp => resp.json())
       .then(data => {
@@ -53,8 +72,13 @@ const Circuit = ( { match } ) => {
    // ---------------------------- FETCHING COUNTRY FLAG ----------------------------------------------- //
 
   useEffect(() => {
-    const country = circuit.Location.country
-    console.log(country)
+    let country = circuit.Location.country
+    if (country === 'UK') {
+      country = 'united kingdom'
+    } if (country === 'Korea') {
+      country = 'Korea (Republic of)'
+    }
+
     fetch(`https://restcountries.eu/rest/v2/name/${country}`)
       .then(resp => resp.json())
       .then(countryData => {
@@ -62,14 +86,22 @@ const Circuit = ( { match } ) => {
         const flag = countryData[0].flag
         setFlag(flag)
       })
-    // console.log('circuit ', circuit.Location.country)
+
+    fetch(`https://restcountries.eu/rest/v2/all`)
+      .then(resp => resp.json())
+      .then((countryData2) => {
+        allCountries = countryData2
+      })
   }, [loading])
+
+  console.log('COUNTRIES: ')
+  console.log(allCountries)
 
   useEffect(() => {
     const updatedMapConfig = {
       height: '400px',
       width: '800px',
-      zoom: 13,
+      zoom: 14,
     }
     updatedMapConfig.latitude = Number(circuit.Location.lat)
     updatedMapConfig.longitude = Number(circuit.Location.long)
@@ -82,8 +114,9 @@ const Circuit = ( { match } ) => {
     .then(data => {
 
       const race = data.MRData.RaceTable.Races[0]
-      if (race){
-        console.log(race.Results)
+      if (race) {
+        // console.log('results')
+        // console.log(race.Results)
         const raceResults = race.Results.map(result => {
           let time =  ''
           if (result.status === 'Finished') {
@@ -96,11 +129,11 @@ const Circuit = ( { match } ) => {
           const positionChange = (result.grid) - (result.position)
           let changeArrow = '' 
           if (positionChange > 0) {
-            changeArrow = '^'
+            changeArrow = <span className="material-icons" style={{ color: 'green'}}>keyboard_arrow_up</span>
           } else if (positionChange < 0) {
-            changeArrow = '.'
+            changeArrow = <span className="material-icons" style={{ color: 'red'}}>keyboard_arrow_down</span>
           } else if (positionChange === 0) {
-            changeArrow = '-'
+            changeArrow = <span className="material-icons">horizontal_rule</span>
           }
           return {
             position: result.position,
@@ -110,9 +143,37 @@ const Circuit = ( { match } ) => {
             grid: result.grid,
             positionChange: positionChange,
             changeArrow: changeArrow,
+            nationality: result.Driver.nationality,
           }
         })
-        // console.log(raceResults)
+
+        // --------------------------- creating pie chart data ----------------------------------------- //
+        console.log('race', raceResults)
+
+        const nationalityData = raceResults.map((driver) => {
+          return driver.nationality
+        })
+        const finalPieData = {}
+        nationalityData.forEach((nationality) => {
+          if (finalPieData[nationality] !== undefined) {
+            finalPieData[nationality] += 1
+          } else {
+            finalPieData[nationality] = 1
+          }
+        })
+        const sortedPieData = Object.fromEntries(
+          Object.entries(finalPieData).sort(([,a],[,b]) => a-b)
+        );
+        const pieKeys = Object.keys(sortedPieData) // ['british', 'brazillian'..]
+        const pieData = pieKeys.map(segment => {
+          return {
+            angle: finalPieData[segment],
+            label: segment
+          }
+        })
+
+        setPieData(pieData)
+        updateisPieChart(true)
         setRaceInfo(race)
         setResults(raceResults)
       }
@@ -142,6 +203,13 @@ const Circuit = ( { match } ) => {
     </div>
   }
 
+  function toggleToolTip(datapoint) {
+    updateTooltip(!isTooltipShown)
+    setNationalilty(datapoint.label)
+  }
+
+  // const myPieData = [{angle: 1}, {angle: 5}, {angle: 2}]
+
   return <div className={'page-background'}>
     <div className={'container'}>
 
@@ -150,7 +218,8 @@ const Circuit = ( { match } ) => {
           <div className={'circuit-info-text'}>
             <h1><a href={circuit.url} target='_blank'>{circuit.circuitName}</a></h1>
             <div>{circuit.Location.locality} - {circuit.Location.country}</div>
-            <img width='400' height='200' style={ {backgroundColor: 'grey'} } src={``}></img>
+            {/* <img width='400' height='200' style={ {backgroundColor: 'grey'} } src={Adelaide}></img> */}
+            <img width='400' height='200' style={ {backgroundColor: 'grey'} } src={`../assets/circuitMaps/${circuit.CircuitId}.svg`}></img>
           </div>
           <img width='200' className='circuit-flag' src={flag}></img>
         </div>
@@ -177,19 +246,48 @@ const Circuit = ( { match } ) => {
           </div>          
         </div>
         
-      </div>
-      {/* <aside className={'container-right-column'}>
-        <SideBar 
-          seasonList={seasonList}
-          fetchRace={fetchRace}
-        /> 
-      </aside> */}
+        <div className='chart-container'>
+          <div className='pie-container'>
+            <div style={{
+                display: isPieChart ? 'block' : 'none',}}>Nationalities</div>
+            <RadialChart className='pieChart'  
+              data={pieData}
+              width={300}
+              height={300}
+              onValueMouseOut={(datapoint, event) => toggleToolTip(datapoint)}
+              onValueMouseOver={(datapoint, event) => toggleToolTip(datapoint)}
+              />
+            <div 
+              className='toolTip'
+              style={{
+                display: isTooltipShown ? 'block' : 'none',
+                // position: `absolute`,
+                textAlign: 'center',
+                backgroundColor: `white`,
+                borderRadius: `10px`,
+                width: '120px',
+                boxShadow: '2px 2px 1px rgb(0,0,0,0.1)',
+                zIndex: '2'
+              }}
+              >
+              <div>{nationality}</div>
+            </div>
+          </div>
+
+          {/* <div className='bar-container'>
+            <XYPlot width={200} height={200}>
+              <VerticalBarSeries 
+                data={barData} />
+            </XYPlot>
+          </div> */}
+        </div>
         
-      
+      </div>
       </div>
   </div>
   
 }
+
 
 // function SideBar( { seasonList, fetchRace } ) {
 //   {/* ---------------------------  YEARS ASIDE -------------------------------------- */}

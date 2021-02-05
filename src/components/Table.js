@@ -63,19 +63,8 @@ const Table = (props) => {
   const rows = props.data.map(rowData => {
     const cells = Object.keys(rowData) // ['position', 'time']
     const rowCells = cells.map((cell, i) => {
-      
-      let color = 'white'
-      if (rowData[cell] === '^') {
-        color = 'green'
-      } else if (rowData[cell] === '-') {
-        color = 'orange'
-      } else if (rowData[cell] === '.'){
-        color = 'red'
-      } else {
-        color = 'white'
-      }
 
-      return <td className='tablecontents' key={i} style={{ borderRadius: '3', backgroundColor: color }}>{rowData[cell]}</td>
+      return <td className='tablecontents' key={i} style={{ borderRadius: '3', backgroundColor: 'white' }}>{rowData[cell]}</td>
     })
     return <tr>
       {rowCells}

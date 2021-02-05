@@ -28,6 +28,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@svgr/webpack": "^5.5.0",
     "axios": "^0.21.1",
     "geojson": "^0.5.0",
     "less": "^4.1.1",
@@ -39,6 +40,7 @@
     "react-map-gl": "^6.1.4",
     "react-mapbox-gl": "^5.1.1",
     "react-router-dom": "^5.2.0",
+    "react-vis": "^1.11.7",
     "rsuite": "^4.8.9",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",

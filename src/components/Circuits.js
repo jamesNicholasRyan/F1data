@@ -4,29 +4,25 @@ import Map from './Map'
 
 import LocationIcon from '../location-icon.png'
 import Table from './Table'
+import Card from './Card'
 
 const Circuits = () => {
   const [circuits, setCircuits] = useState([])
   const [filterYear, setFilterYear] = useState('yyyy')
-  const [filterName, setFilterName] = useState('')
+  const [filterTerm, setFilterTerm] = useState('')
+  const [filteredCircuits, setFilteredCircuits] = useState([])
   const [activeYears, setActiveYears] = useState([])
   const [showMap, setShowMap] = useState(true)
 
+  // Provides circuit data
   useEffect(() => {
     fetch('https://ergast.com/api/f1/circuits.json?limit=78')
       .then((resp) => resp.json())
       .then((data) => {
         setCircuits(data.MRData.CircuitTable.Circuits)
+        setFilteredCircuits(data.MRData.CircuitTable.Circuits)
       })
   }, [])
-
-  function filterCircuits() {
-    fetch(`https://ergast.com/api/f1/${filterYear}/circuits.json`)
-      .then((resp) => resp.json())
-      .then((data) => {
-        setCircuits(data.MRData.CircuitTable.Circuits)
-      })
-  }
 
   useEffect(() => {
     fetch('http://ergast.com/api/f1/seasons.json?limit=100')
@@ -38,15 +34,32 @@ const Circuits = () => {
         setActiveYears(years)
       })
   }, [])
-  
-  function filterCircuitsByName() {
-    // if (!filterName) {
-    //   return
-    // }
 
-    return circuits.filter((circuit) => {
-      return circuit.circuitName.toLowerCase().includes(filterName.toLocaleLowerCase())
+    // Apply Filters
+  useEffect(() => {
+    filterByYear()
+  }, [filterYear])
+
+  function filterByYear(){
+    if (filterYear === 'yyyy') {
+      return setFilteredCircuits(circuits)
+    }
+    fetch(`https://ergast.com/api/f1/${filterYear}/circuits.json`)
+      .then((resp) => resp.json())
+      .then((data) => {
+        setFilteredCircuits(data.MRData.CircuitTable.Circuits)
+      })
+  }
+
+
+  function filterCircuitsByName() {
+    filterByYear()
+
+    const filtered = filteredCircuits.filter((circuit) => {
+      return circuit.circuitName.toLowerCase().includes(filterTerm.toLowerCase())
     })
+    setFilteredCircuits(filtered)
+
   }  
 
   const yearSelectBox = <select 
@@ -65,13 +78,13 @@ const Circuits = () => {
     <div>
       <span 
         className="material-icons"
-        style={ showMap === false ? { color: 'grey' } : { color: 'black' }}
+        style={ showMap === false ? { color: 'grey' } : { color: '#32bebe' }}
         onClick={() => setShowMap(true)}>language</span>
     </div>
     <div>
       <span 
         className="material-icons"
-        style={ showMap === false ? { color: 'black' } : { color: 'grey' }}
+        style={ showMap === false ? { color: '#32bebe' } : { color: 'grey' }}
         onClick={() => setShowMap(false)}>view_module</span>
     </div>
   </div> 
@@ -87,34 +100,17 @@ const Circuits = () => {
   let body = ''
 
   if (showMap) {
+    console.log(filteredCircuits)
     body = <div id={'map-container'}>
-      <Map config={mapConfig} data={circuits}/>
+      <Map config={mapConfig} data={filteredCircuits}/>
     </div>
   } else {
     body = <div className={'card-container'}>
-      {filterCircuitsByName().map((circuit) => {
-        return <div className={'card-outer'}><Link 
-          key={circuit.circuitId} 
-          to={{
-            pathname: `/circuits/${circuit.circuitId}`,
-          }}
-          >
-            <div className='circuit-card'>
-              <div className={'circuit-card-image'}>
-
-              </div>
-              <div className={'circuit-card-info'}>
-                <h4>{circuit.circuitName}</h4>
-              </div>
-              
-            </div>
-        </Link></div>
+      {filteredCircuits.map((circuit) => {
+        return <Card key={circuit.circuitId} circuit={circuit} />
       })}
     </div>
-    
-  
   }
-
 
   return <div>
 
@@ -128,15 +124,15 @@ const Circuits = () => {
           placeholder='Search by name...'
           className={'search-input'}
           onChange={(event) => {
-            setFilterName(event.target.value)
+            setFilterTerm(event.target.value)
           }}
           onKeyPress={event => {
             if (event.key === 'Enter') {
-              console.log('search')
+
               filterCircuitsByName()
             }
           }}
-          value={filterName}
+          value={filterTerm}
         />
         <span className="material-icons">search</span>
       </div>
