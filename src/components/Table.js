@@ -16,12 +16,8 @@ const Table = (props) => {
     {
       header: 'Constructor',
       dataKey: 'constructor',
-      width: '240px'
+      width: '200px'
     },
-    // {
-    //   header: 'Nationality',
-    //   dataKey: ''
-    // },
     {
       header: 'Time',
       dataKey: 'time',
@@ -43,14 +39,14 @@ const Table = (props) => {
       width: '5px',
       // color: 'color',
     },
-    // {
-    //   header: 'Fastest Lap Time',
-    //   dataKey: 'fastestLap'
-    // },
-    // {
-    //   header: 'Average Speed',
-    //   dataKey: ''
-    // },
+    {
+      header: 'Nationality',
+      dataKey: 'fastestLap'
+    },
+    {
+      header: '',
+      dataKey: ''
+    },
   ] 
 
   const columns = config.map((column, i) => {

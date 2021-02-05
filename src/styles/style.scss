@@ -1,12 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Work+Sans:wght@300;400;500;700&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,400;1,500&display=swap');
+
+
 body * {
   box-sizing: border-box;
 }
 
 body {
   font-family: 'Roboto', 'Work Sans', sans-serif;
-  background-color: rgb(0,0,0,0.025)
+  background-color: rgb(0,0,0,0.025);
 }
 
 h1,h2,h3,h4,h5,h6,p {
@@ -17,6 +22,7 @@ h1 {
   font-size: 40px;
   font-weight: lighter;
   color: #32bebe;
+  font-family: 'Exo', 'Roboto', sans-serif;
 }
 
 h3 {
@@ -49,13 +55,27 @@ h1 a {
 
 .logo-container {
   margin-left: 25px;
+  display: flex;
+  align-items: center;
+  align-content: center;
 }
 
 .logo-container img {
-  // position: relative;
-  // top: 15px;
-  height: 60px;
-  // overflow-y: hidden;
+  height: 40px;
+}
+
+.logo-container h2 {
+  font-size: 24px;
+  color: #32bebe;
+  margin: 0;
+  padding: 0;
+  margin-left: 15px;
+  // font-weight: bold;
+  // font-family: 'Fredoka One', 'Roboto', sans-serif;
+  font-family: 'Exo', 'Roboto', sans-serif;
+  font-weight: medium;
+  font-style: italic;
+  
 }
 
 .nav-links {
@@ -77,7 +97,7 @@ h1 a {
 
 .welcome-message {
   position: fixed;
-  left: 45%;
+  left: 43%;
   top: 30%;
   z-index: 3;
   font-size: 40px;
@@ -194,6 +214,12 @@ h1 a {
   border-radius: 10px;
 }
 
+.seasons-title {
+  margin: 10px;
+  font-size: 20px;
+  color: #32bebe;
+}
+
 .tag-container {
   display: flex;
   justify-content: center;
@@ -243,6 +269,8 @@ tr > th,
 tr > td {
   padding: 8px;
   font-size: 14px;
+  background-color: rgb(0,0,0,0.025);
+  border-bottom: rgb(0,0,0,0.035)
 }
 
 .markerInner {

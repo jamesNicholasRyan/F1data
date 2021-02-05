@@ -3,8 +3,9 @@ import { Nav, Sidenav, Dropdown, NavBar, Icon, Tag, TagGroup } from 'rsuite'
 import Table from './Table'
 import Map from './Map'
 import { RadialChart, VerticalBarSeries, XYPlot, XAxis, YAxis } from 'react-vis'
-// import Adelaide from '../assets/circuitMaps/adelaide.svg'
-// import Riverside from '../assets/circuitMaps/riverside.svg'
+import Adelaide from '../assets/circuitMaps/adelaide.svg'
+import Mugello from '../assets/circuitMaps/mugello.svg'
+import Silverstone from '../assets/circuitMaps/silverstone.png'
 
 // function importAll(r) {
 //   return r.keys().map(r)
@@ -47,9 +48,9 @@ const Circuit = ( { match } ) => {
   const [isPieChart, updateisPieChart] = useState(false)
   const [nationality, setNationalilty] = useState('')
   const [flags, setFlags] = useState([])
-
+  const [allCountries, setCountries] = useState([])
   const circuitName = match.params.id
-  const allCountries = []
+
 
   useEffect(() => {
     
@@ -90,12 +91,9 @@ const Circuit = ( { match } ) => {
     fetch(`https://restcountries.eu/rest/v2/all`)
       .then(resp => resp.json())
       .then((countryData2) => {
-        allCountries = countryData2
+        setCountries(countryData2)
       })
   }, [loading])
-
-  console.log('COUNTRIES: ')
-  console.log(allCountries)
 
   useEffect(() => {
     const updatedMapConfig = {
@@ -135,6 +133,10 @@ const Circuit = ( { match } ) => {
           } else if (positionChange === 0) {
             changeArrow = <span className="material-icons">horizontal_rule</span>
           }
+          const filteredCountry = allCountries.find((country) => {
+            return country.demonym === result.Driver.nationality
+          })
+          const flag = <img width='30' src={filteredCountry.flag} alt={result.Driver.nationality}></img>
           return {
             position: result.position,
             driver: `${result.Driver.givenName} ${result.Driver.familyName}`,
@@ -144,11 +146,11 @@ const Circuit = ( { match } ) => {
             positionChange: positionChange,
             changeArrow: changeArrow,
             nationality: result.Driver.nationality,
+            flag: flag,
           }
         })
 
         // --------------------------- creating pie chart data ----------------------------------------- //
-        console.log('race', raceResults)
 
         const nationalityData = raceResults.map((driver) => {
           return driver.nationality
@@ -208,8 +210,6 @@ const Circuit = ( { match } ) => {
     setNationalilty(datapoint.label)
   }
 
-  // const myPieData = [{angle: 1}, {angle: 5}, {angle: 2}]
-
   return <div className={'page-background'}>
     <div className={'container'}>
 
@@ -219,20 +219,24 @@ const Circuit = ( { match } ) => {
             <h1><a href={circuit.url} target='_blank'>{circuit.circuitName}</a></h1>
             <div>{circuit.Location.locality} - {circuit.Location.country}</div>
             {/* <img width='400' height='200' style={ {backgroundColor: 'grey'} } src={Adelaide}></img> */}
-            <img width='400' height='200' style={ {backgroundColor: 'grey'} } src={`../assets/circuitMaps/${circuit.CircuitId}.svg`}></img>
+            <img height='200' style={ {marginTop: '10'} }src={Mugello}></img>
           </div>
           <img width='200' className='circuit-flag' src={flag}></img>
         </div>
 
       {map}
 
+        <div className='seasons-title'>SEASONS:</div>
         <div className='tag-container'>
           <div className='tag-group'>
             {seasonList.map((season) => {
-              return <div className='tag' key={season.season} color="blue" onClick={(event) => {fetchRace(event.target.innerText)}}>
-                  {/* <div>{season.season}</div> */}
-                  <span className='year-text'>{season.season}</span>
-                </div>
+              if (season.season !== '2021') {
+                return <div className='tag' key={season.season} color="blue" onClick={(event) => {fetchRace(event.target.innerText)}}>
+                {/* <div>{season.season}</div> */}
+                <span className='year-text'>{season.season}</span>
+              </div>
+              }
+
             })}
           </div>
         </div>
