@@ -37,7 +37,7 @@ const Map = (props) => {
       // })
   
       return <Marker key={i} latitude={latLong.lat} longitude={latLong.long}>
-        <Link to={`/circuits/${circuit.circuitId}`}>
+        <Link to={`F1data/circuits/${circuit.circuitId}`}>
           <div className={'markerInner'}>
             <p id={circuit.circuitId} style={markerLabelStyle}>{circuit.circuitName}</p>
           </div>

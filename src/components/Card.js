@@ -6,7 +6,7 @@ const Card = ({ circuit }) => {
   return <div className={'card-outer'}><Link 
   key={circuit.circuitId} 
   to={{
-    pathname: `/circuits/${circuit.circuitId}`,
+    pathname: `F1data/circuits/${circuit.circuitId}`,
   }}
   >
     <div className='circuit-card'>

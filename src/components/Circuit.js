@@ -230,13 +230,12 @@ const Circuit = ( { match } ) => {
         <div className='tag-container'>
           <div className='tag-group'>
             {seasonList.map((season) => {
-              if (season.season !== '2021') {
+              if (season.season !== '2021') { // excluding year 2021
                 return <div className='tag' key={season.season} color="blue" onClick={(event) => {fetchRace(event.target.innerText)}}>
                 {/* <div>{season.season}</div> */}
                 <span className='year-text'>{season.season}</span>
               </div>
               }
-
             })}
           </div>
         </div>
