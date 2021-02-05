@@ -25,7 +25,7 @@ const Circuits = () => {
   }, [])
 
   useEffect(() => {
-    fetch('http://ergast.com/api/f1/seasons.json?limit=100')
+    fetch('https://ergast.com/api/f1/seasons.json?limit=100')
       .then((resp) => resp.json())
       .then((seasonsData) => {
         const years = seasonsData.MRData.SeasonTable.Seasons.map(season => {

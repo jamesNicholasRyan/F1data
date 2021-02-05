@@ -54,7 +54,7 @@ const Circuit = ( { match } ) => {
 
   useEffect(() => {
     
-    fetch(`http://ergast.com/api/f1/circuits/${match.params.id}.json`)
+    fetch(`https://ergast.com/api/f1/circuits/${match.params.id}.json`)
       .then(resp => resp.json())
       .then(data => {
         const circuitObj = data.MRData.CircuitTable.Circuits[0]
@@ -62,7 +62,7 @@ const Circuit = ( { match } ) => {
         setLoading(false)
       })
     
-    fetch(`http://ergast.com/api/f1/circuits/${match.params.id}/seasons.json?limit=100`)
+    fetch(`https://ergast.com/api/f1/circuits/${match.params.id}/seasons.json?limit=100`)
       .then(resp => resp.json())
       .then(data => {
           const seasonArr = data.MRData.SeasonTable.Seasons
@@ -107,7 +107,7 @@ const Circuit = ( { match } ) => {
   }, [circuit])
 
   function fetchRace(year) {
-    fetch(`http://ergast.com/api/f1/${year}/circuits/${circuit.circuitId}/results.json`)
+    fetch(`https://ergast.com/api/f1/${year}/circuits/${circuit.circuitId}/results.json`)
     .then(resp => resp.json())
     .then(data => {
 
