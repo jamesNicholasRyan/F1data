@@ -17,7 +17,7 @@ const Home = () => {
   
   return <div>
       <img className='home-image' src={backgroundImage}></img>
-      <Link to={'F1data/circuits'} className='welcome-message'>Start discovering...</Link>
+      <Link to={'/F1data/circuits'} className='welcome-message'>Start discovering...</Link>
     </div>
 }
 
