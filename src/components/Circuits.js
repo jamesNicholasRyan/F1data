@@ -120,7 +120,7 @@ const Circuits = () => {
 
       <div className={'search-input-container'}>
         <input 
-          type='text' 
+          type='text'
           placeholder='Search by name...'
           className={'search-input'}
           onChange={(event) => {
@@ -128,7 +128,6 @@ const Circuits = () => {
           }}
           onKeyPress={event => {
             if (event.key === 'Enter') {
-
               filterCircuitsByName()
             }
           }}
