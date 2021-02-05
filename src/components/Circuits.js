@@ -100,7 +100,6 @@ const Circuits = () => {
   let body = ''
 
   if (showMap) {
-    console.log(filteredCircuits)
     body = <div id={'map-container'}>
       <Map config={mapConfig} data={filteredCircuits}/>
     </div>

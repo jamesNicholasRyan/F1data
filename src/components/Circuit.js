@@ -7,16 +7,9 @@ import Adelaide from '../assets/circuitMaps/adelaide.svg'
 import Mugello from '../assets/circuitMaps/mugello.svg'
 import Silverstone from '../assets/circuitMaps/silverstone.png'
 
-// function importAll(r) {
-//   return r.keys().map(r)
-// }
-// const images = importAll(require.context('../assets/circuitMaps/', false, /\.(png|jpe?g|svg)$/));
-// console.log('image: ', images)
 
 const Circuit = ( { match } ) => {
 
-  // console.log('adelaide: ', Adelaide)
-  // console.log(Riverside)
   const [circuit, setCircuit] = useState({
     circuitId: '',
     circuitName: '',
@@ -51,9 +44,10 @@ const Circuit = ( { match } ) => {
   const [allCountries, setCountries] = useState([])
   const circuitName = match.params.id
 
+  // const [circuitMap, setCircuitMap] = useState('../assets/circuitMaps/mugello.svg')
+
 
   useEffect(() => {
-    
     fetch(`https://ergast.com/api/f1/circuits/${match.params.id}.json`)
       .then(resp => resp.json())
       .then(data => {
@@ -83,7 +77,6 @@ const Circuit = ( { match } ) => {
     fetch(`https://restcountries.eu/rest/v2/name/${country}`)
       .then(resp => resp.json())
       .then(countryData => {
-        // console.log(countryData[0])
         const flag = countryData[0].flag
         setFlag(flag)
       })
@@ -113,8 +106,6 @@ const Circuit = ( { match } ) => {
 
       const race = data.MRData.RaceTable.Races[0]
       if (race) {
-        // console.log('results')
-        // console.log(race.Results)
         const raceResults = race.Results.map(result => {
           let time =  ''
           if (result.status === 'Finished') {
@@ -219,7 +210,8 @@ const Circuit = ( { match } ) => {
             <h1><a href={circuit.url} target='_blank'>{circuit.circuitName}</a></h1>
             <div>{circuit.Location.locality} - {circuit.Location.country}</div>
             {/* <img width='400' height='200' style={ {backgroundColor: 'grey'} } src={Adelaide}></img> */}
-            <img height='200' style={ {marginTop: '10'} }src={Mugello}></img>
+            {/* <img height='200' style={ {marginTop: '10'} }src={Mugello}></img> */}
+            <img height='200' style={ {marginTop: '10'} }src={'https://i.imgur.com/rQoBU4O.png'}></img>
           </div>
           <img width='200' className='circuit-flag' src={flag}></img>
         </div>

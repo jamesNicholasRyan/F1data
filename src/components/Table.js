@@ -56,13 +56,13 @@ const Table = (props) => {
     return <th className='tablecontents' key={i} style={style}>{column.header}</th>
   })
 
-  const rows = props.data.map(rowData => {
+  const rows = props.data.map((rowData, i) => {
     const cells = Object.keys(rowData) // ['position', 'time']
-    const rowCells = cells.map((cell, i) => {
+    const rowCells = cells.map((cell, j) => {
 
-      return <td className='tablecontents' key={i} style={{ borderRadius: '3', backgroundColor: 'white' }}>{rowData[cell]}</td>
+      return <td className='tablecontents' key={j} style={{ borderRadius: '3', backgroundColor: 'white' }}>{rowData[cell]}</td>
     })
-    return <tr>
+    return <tr key={i}>
       {rowCells}
     </tr>
   })
