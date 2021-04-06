@@ -35,7 +35,7 @@ const Circuits = () => {
       })
   }, [])
 
-    // Apply Filters
+  // Apply Filters
   useEffect(() => {
     filterByYear()
   }, [filterYear])
@@ -60,7 +60,7 @@ const Circuits = () => {
     })
     setFilteredCircuits(filtered)
 
-  }  
+  }
 
   const yearSelectBox = <select 
     className={'year-select'}
