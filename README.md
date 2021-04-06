@@ -5,6 +5,8 @@
 ## Overview
 This was a two day pair project, where we were tasked with picking an existing API and implementing it into our own website. My partner and I decided to go with an F1 motorsports API, as I felt the data provided had lots of potential for great visuals. I utilised the capabilities of a REST API (GET, PUT, POST, DELETE) to create a fully functioning website that visually displayed all historical F1 Grand Prixs and their circuits.
 
+Try it out [here](https://jamesnicholasryan.github.io/F1data/)!
+
 ## Brief
 
 * **Consume a public API** – this could be anything but it must make sense for your project.
