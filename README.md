@@ -176,8 +176,15 @@ if (race) {
 
 # Conclusion
 
+## Key Learnings
+This was my first opportunity to work on a project that utilised a public API for the main source of content for a website. It was a great opportunity to learn about APIs and how to work with different data types. I found it interesting working out what kind of data the API would return from each request. I quickly learned, that by reading API docs one can plan for these situations, saving a lot of time in development. 
+
+This project was also the first chance I had at applying my new knowledge of the React framework. Once I was pas the initial learning curve, I found the framework to be very efficient at creating SPAs. The framework allows you to create very succinct and neat code, owing to the component aspect of the Reacts file system. 
+
+I implemented a few external libraries for this site, the main one being MapGL. Learning how to integrate these with React had its own learning curve, however, once that hurdle was overcome the potential for creating interesting visuals and an interactive website is exciting.
+
 ## Challenges
-When fetching the flags from the Rest Countries API I encountered a small issue. I was using the F1 data 'country' value for each circuit, where 'United Kingdom' was listed as 'UK'. The countries API would read the 'UK' query as 'Ukraine' and returned the wrong flag. A similar issue was occuring for 'South Korea'. To ammend this, I hard coded in some checks before sending the request to the countries API:
+When fetching the flags from the Rest Countries API I encountered a small issue. I was using the F1 data 'country' value for each circuit, where 'United Kingdom' was listed as 'UK'. The countries API would read the 'UK' query as 'Ukraine' and returned the wrong flag. A similar issue was occuring for 'South Korea'. To ammend this, I hard coded in some checks before sending the request to the countries API. This isn't a perfect solution - somewhat of a 'hack' - however, due to the time constraints it was an ideal work around for the situation:
 ```js
   let country = circuit.Location.country
   if (country === 'UK') {
