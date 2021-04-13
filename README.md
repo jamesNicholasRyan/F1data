@@ -2,7 +2,7 @@
 
 # GA Project 2 - Circuit Mapper
 
-##Overview
+## Overview
 
 For the 2nd project at General Assembly, I teamed up with another student to deliver 'Circuit Mapper'. Circuit Mapper is a front end application that displays Formula One data in a fun, interactive way. The project was built in just 2 days, and applies the React Hooks and API skills we had been working on in the weeks prior. Users are able to navigate a map to see various circuits, and then check the details of each circuit to see results at a specific track over the course of a number of years.
 
@@ -10,7 +10,7 @@ You can access the live project [here](https://srosser2.github.io/GA02-F1Circuit
 
 ![](https://imgur.com/ImzXKmT.jpg)
 ​
-##Brief
+## Brief
 ​
 The app had the following requirements:
 
@@ -36,9 +36,9 @@ The app had the following requirements:
 - GitHub
 
 
-##Approach
+## Approach
 
-###Planning
+### Planning
 
 My teammate came up with the concept after discovering the [Ergast API](https://ergast.com/mrd/). We both reviewed the endpoints using the Insomnia API Client to see what kind of data we could get from the API and how we could visualize it in an interesting way. I suggested using InVision to create  wireframes, which made collaborative whiteboarding easy. 
 
@@ -48,9 +48,9 @@ Once we had a good idea of the features, we prioritised each feature, and then s
 
 For this project, we used the 'Live Share' VS Code extension that allows collaborative coding directly inside another user's text editor. The remote user has to connect to the host's computer, and from there you edit the same files. We had not used Git collaboratively at this point, so this was the easiest and quickest solution to get started. Given the short timeframe of the project, this approach worked fine. 
 
-###Delivery
+### Delivery
 
-####The Map Component
+#### The Map Component
 
 My main responsibility in this project was to deliver the map component, the key requirements of which were:
 
@@ -132,7 +132,7 @@ const Map = (props) => {
 
 
 
-####The Table Component
+#### The Table Component
 
 The map detail page contains a table component that displays race results based on the year that the user selects. 
 
@@ -200,35 +200,35 @@ export default Table
 
 ```
 
-###Other Contributions
+### Other Contributions
 
 - The card view of tracks
 - Styling CSS in the nav bar, map, card view
 - Configuring Webpack to use file loader and svg loader.
 
 
-##Known Bugs
+## Known Bugs
 
 - There is a strange behaviour when searching, where the labels for each track on the map updates to an incorrect track. The user has to zoom out and then back in to see the correct track name at the correct location.
 - Due to time constraints, we did not have time to put in the SVG for each track on each page.
 - When filtering race results on a specific circuit page, there is an error where the flag can't be matched to a specific driver as the driver data doesn't match the country API data correctly.
 
-##Wins
+## Wins
 
 - This was the first time I had used Map GL and really enjoyed how quick it is to get started with and get good results.
 - This was the first project using React Hooks. I have used React with class-based components, so it took some time getting used to doing things with Hooks. 
 
 
-##Challenges
+## Challenges
 
 - The image import method using Webpack made it difficult to import the correct track image to the circuit detail page dynamically. Although we got this to work, we did not have time to change it for all tracks.
 - We tried out some component libraries (RSuite), but due to the limited amount of time and learning curve to get things started, we decided to create components ourselves. Given more time to learn the libraries, we would have opted to use something like RSuite or Material UI.
 
-##Key Learnings
+## Key Learnings
 
 - It takes time to learn libraries, and can be easier to implement something yourself if time is limited.
 
-##Future Improvements
+## Future Improvements
 
 - Add the correct track image to each circuit.
 - Fix the map functionality so that the correct label shows on the map when the user filters the data via search.
