@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Nav, Sidenav, Dropdown, NavBar, Icon, Tag, TagGroup } from 'rsuite' 
 import Table from './Table'
 import Map from './Map'
-import { RadialChart, VerticalBarSeries, XYPlot, XAxis, YAxis } from 'react-vis'
+import { RadialChart, VerticalBarSeries, XYPlot, XAxis, YAxis, LineMarkSeries,  VerticalGridLines, HorizontalGridLines  } from 'react-vis'
+
 import Adelaide from '../assets/circuitMaps/adelaide.svg'
 import Mugello from '../assets/circuitMaps/mugello.svg'
 import Silverstone from '../assets/circuitMaps/silverstone.png'
 import getCircuitMaps from '../utils/getCircuitMaps'
 import greyFlag from '../assets/grey_flag.png'
+import LapTimes from './LapTimes'
 
 const circuitMaps = getCircuitMaps()
 
@@ -43,7 +45,9 @@ const Circuit = ( { match } ) => {
   const [nationality, setNationalilty] = useState('')
   const [flags, setFlags] = useState([])
   const [allCountries, setCountries] = useState([])
+  const [lapData, setLapData] = useState([])
   const circuitName = match.params.id
+  const [lapToggle, toggleLaps] = useState(false)
 
   useEffect(() => {
     fetch(`https://ergast.com/api/f1/circuits/${match.params.id}.json`)
@@ -62,7 +66,7 @@ const Circuit = ( { match } ) => {
     })
   }, [])
 
-  // ---------------------------- FETCHING COUNTRY FLAG ----------------------------------------------- //
+  // ---------------------------- FETCHING COUNTRY FLAG ----------------------------------------- //
 
   useEffect(() => {
     let country = circuit.Location.country
@@ -100,6 +104,7 @@ const Circuit = ( { match } ) => {
   }, [circuit])
 
   function fetchRace(year) {
+    toggleLaps(true)
     fetch(`https://ergast.com/api/f1/${year}/circuits/${circuit.circuitId}/results.json`)
     .then(resp => resp.json())
     .then(data => {
@@ -186,8 +191,42 @@ const Circuit = ( { match } ) => {
         setRaceInfo(race)
         setResults(raceResults)
       }
+
+      // --------------------- CREATING LAPTIMES DATA ---------------------------------------- //
+      const round = data.MRData.RaceTable.Races[0].round
+      const driverList = race.Results.map((driver) => {
+        return driver.Driver.driverId
+      })
+      let newLapData = []
+      driverList.forEach((driver) => {
+        fetch(`https://ergast.com/api/f1/${year}/${round}/drivers/${driver}/laps.json`)
+          .then(resp => resp.json())
+          .then(data => {
+            // console.log(data.MRData.RaceTable.Races[0].Laps)
+            const laps = data.MRData.RaceTable.Races[0].Laps
+            const newTimings = laps.map((lap) => {
+              return { 
+                x: Number(lap.number), 
+                // y: lap.Timings[0].time
+                y: convertTime(lap.Timings[0].time)
+              }
+            })
+            const driverData = { driver: driver, lapTimes: newTimings }
+            newLapData.push(driverData)
+          })
+        })
+        setLapData(newLapData)
+        // console.log(newLapData)
     })
-    // http://ergast.com/api/f1/${year}/circuits/{$.circuit.circuitId}/results.json
+
+  }
+
+  function convertTime(time) {
+    const colonSplit = time.split(':')
+    const numbers = colonSplit.map((word) => Number(word))
+    const finalSeconds = (numbers[0] * 60) + (numbers[1])
+    // console.log(finalSeconds)
+    return finalSeconds
   }
 
   let raceInfoJSX = ''
@@ -209,6 +248,15 @@ const Circuit = ( { match } ) => {
   if (mapConfig.latitude) {
     map = <div className='map-container'>
       <Map config={mapConfig}/>
+    </div>
+  }
+
+  let times 
+  if (lapData) {
+    times = <div className='lapTimes-container'>
+      <LapTimes
+        data={lapData}
+      />
     </div>
   }
 
@@ -289,16 +337,14 @@ const Circuit = ( { match } ) => {
             </div>
           </div>
 
-          {/* <div className='bar-container'>
-            <XYPlot width={200} height={200}>
-              <VerticalBarSeries 
-                data={barData} />
-            </XYPlot>
-          </div> */}
+          {lapToggle && <div className='chart-container'>
+            {times}
+          </div>}
+          
         </div>
         
       </div>
-      </div>
+    </div>
   </div>
   
 }
