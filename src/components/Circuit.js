@@ -7,6 +7,7 @@ import Adelaide from '../assets/circuitMaps/adelaide.svg'
 import Mugello from '../assets/circuitMaps/mugello.svg'
 import Silverstone from '../assets/circuitMaps/silverstone.png'
 import getCircuitMaps from '../utils/getCircuitMaps'
+import greyFlag from '../assets/grey_flag.png'
 
 const circuitMaps = getCircuitMaps()
 
@@ -121,10 +122,26 @@ const Circuit = ( { match } ) => {
           } else if (positionChange === 0) {
             changeArrow = <span className="material-icons">horizontal_rule</span>
           }
+
           const filteredCountry = allCountries.find((country) => {
-            return country.demonym === result.Driver.nationality
+            let driverCountry = ''
+            if (result.Driver.nationality === 'Argentine') {
+              driverCountry = 'Argentinean'
+            } else if (result.Driver.nationality === 'Dutch') {
+              return country.name === 'Netherlands'
+            } else {
+              driverCountry = result.Driver.nationality
+            }
+            return country.demonym === driverCountry
           })
-          const flag = <img width='30' src={filteredCountry.flag} alt={result.Driver.nationality}></img>
+
+          let flag = ''
+          if (filteredCountry) {
+            flag = <img width='30' src={filteredCountry.flag} alt={result.Driver.nationality}></img>
+          } else {
+            flag = <img width='30' height='18' src={greyFlag} alt='No flag available' style={{backgroundColor: 'grey'}}></img>
+          }
+
           return {
             position: result.position,
             driver: `${result.Driver.givenName} ${result.Driver.familyName}`,

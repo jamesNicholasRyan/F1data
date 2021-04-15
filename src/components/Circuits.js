@@ -14,7 +14,6 @@ const Circuits = () => {
   const [activeYears, setActiveYears] = useState([])
   const [showMap, setShowMap] = useState(true)
 
-  console.log('extra bits')
   // Provides circuit data
   useEffect(() => {
     fetch('https://ergast.com/api/f1/circuits.json?limit=78')
