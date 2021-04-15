@@ -12,7 +12,7 @@ const Circuits = () => {
   const [filterTerm, setFilterTerm] = useState('')
   const [filteredCircuits, setFilteredCircuits] = useState([])
   const [activeYears, setActiveYears] = useState([])
-  const [showMap, setShowMap] = useState(true)
+  const [showMap, setShowMap] = useState(false)
 
   // Provides circuit data
   useEffect(() => {
@@ -74,20 +74,20 @@ const Circuits = () => {
   </select>
 
 
-  const mapToggleButton = <div className={'view-toggle'}>
-    <div>
-      <span 
-        className="material-icons"
-        style={ showMap === false ? { color: 'grey' } : { color: '#32bebe' }}
-        onClick={() => setShowMap(true)}>language</span>
-    </div>
-    <div>
-      <span 
-        className="material-icons"
-        style={ showMap === false ? { color: '#32bebe' } : { color: 'grey' }}
-        onClick={() => setShowMap(false)}>view_module</span>
-    </div>
-  </div> 
+  // const mapToggleButton = <div className={'view-toggle'}>
+  //   <div>
+  //     <span 
+  //       className="material-icons"
+  //       style={ showMap === false ? { color: 'grey' } : { color: '#32bebe' }}
+  //       onClick={() => setShowMap(true)}>language</span>
+  //   </div>
+  //   <div>
+  //     <span 
+  //       className="material-icons"
+  //       style={ showMap === false ? { color: '#32bebe' } : { color: 'grey' }}
+  //       onClick={() => setShowMap(false)}>view_module</span>
+  //   </div>
+  // </div> 
 
   const mapConfig = {
     height: '100vh',
@@ -115,7 +115,7 @@ const Circuits = () => {
 
     <div className={'search-container'}>
 
-      {yearSelectBox}
+      {/* {yearSelectBox} */}
 
       <div className={'search-input-container'}>
         <input 
@@ -134,10 +134,23 @@ const Circuits = () => {
         />
         <span className="material-icons">search</span>
       </div>
-      
+      <div className={'toggle-view'}>
+       <span 
+         className="material-icons"
+         style={ showMap === false ? { color: 'grey' } : { color: '#32bebe' }}
+         onClick={() => setShowMap(true)}>language</span>
+      </div>
+      <div className={'toggle-view'}>
+        <span 
+          className="material-icons"
+          style={ showMap === false ? { color: '#32bebe' } : { color: 'grey' }}
+          onClick={() => setShowMap(false)}>view_module</span>
+      </div>
+
+      {/* {mapToggleButton} */}
     </div>
 
-    {mapToggleButton}
+    
 
     {body}
     
