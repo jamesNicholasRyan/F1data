@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom'
 import Map from './Map'
 
 import LocationIcon from '../location-icon.png'
-import Table from './Table'
+import SeasonsFilter from './SeasonsFilter'
 import Card from './Card'
 
 const initialState = {
   circuits: [],
   filteredCircuits: [],
-  filterYear: 'yyyy',
+  selectedSeason: 'yyyy',
+  searchTerm: '',
+  seasons: [],
   error: null
 }
 
@@ -27,10 +29,10 @@ const reducer = (state, action) => {
         ...state,
         error: action.error
       }
-    case 'FILTER_YEAR':
+    case 'FILTER_SEASON':
       return {
         ...state,
-        filterYear: action.payload.year,
+        selectedSeason: action.payload.year,
         filteredCircuits: action.payload.filteredCircuits
       }
     case 'FILTER_NAME': 
@@ -38,17 +40,24 @@ const reducer = (state, action) => {
         ...state,
         filteredCircuits: action.payload.filteredCircuits
       }
+    case 'SET_SEARCH_TERM': 
+      return {
+        ...state,
+        searchTerm: action.payload
+      }
+    case 'FETCH_SEASONS':
+      return {
+        ...state,
+        seasons: action.payload
+      }
+    default:
+      return state
   }
 }
 
 const Circuits = () => {
 
   const [state, dispatch] = useReducer(reducer, initialState)
-  // const [circuits, setCircuits] = useState([])
-  // const [filterYear, setFilterYear] = useState('yyyy')
-  const [filterTerm, setFilterTerm] = useState('')
-  const [filteredCircuits, setFilteredCircuits] = useState([])
-  const [activeYears, setActiveYears] = useState([])
   const [showMap, setShowMap] = useState(true)
 
   // Provides circuit data
@@ -70,30 +79,14 @@ const Circuits = () => {
         const years = seasonsData.MRData.SeasonTable.Seasons.map(season => {
           return season.season
         })
-        setActiveYears(years)
+        dispatch({ type: 'FETCH_SEASONS', payload: years })
       })
   }, [])
-
-  // Apply Filters
-  // useEffect(() => {
-  //   filterByYear()
-  // }, [filterYear])
-
-  // function filterByYear(){
-  //   if (filterYear === 'yyyy') {
-  //     return setFilteredCircuits(circuits)
-  //   }
-  //   fetch(`https://ergast.com/api/f1/${filterYear}/circuits.json`)
-  //     .then((resp) => resp.json())
-  //     .then((data) => {
-  //       setFilteredCircuits(data.MRData.CircuitTable.Circuits)
-  //     })
-  // }
 
   function filterByYear(year){
     if (year === 'yyyy') {
       return dispatch({ 
-        type: 'FILTER_YEAR', 
+        type: 'FILTER_SEASON', 
         payload: {
           year: year,
           filteredCircuits: state.circuits
@@ -105,7 +98,7 @@ const Circuits = () => {
       .then((resp) => resp.json())
       .then((data) => {
         dispatch({
-          type: 'FILTER_YEAR',
+          type: 'FILTER_SEASON',
           payload: {
             year: year,
             filteredCircuits: data.MRData.CircuitTable.Circuits
@@ -116,9 +109,9 @@ const Circuits = () => {
 
 
   function filterCircuitsByName(searchTerm) {
-    // filterByYear(state.filterYear)
+    // filterByYear(state.selectedSeason)
 
-    if (state.filterYear === 'yyyy') {
+    if (state.selectedSeason === 'yyyy') {
       const filtered = state.circuits.filter((circuit) => {
           return circuit.circuitName.toLowerCase().includes(searchTerm.toLowerCase())
       })
@@ -131,7 +124,7 @@ const Circuits = () => {
       })
     }
 
-    fetch(`https://ergast.com/api/f1/${state.filterYear}/circuits.json`)
+    fetch(`https://ergast.com/api/f1/${state.selectedSeason}/circuits.json`)
       .then((resp) => resp.json())
       .then((data) => {
         const circuits = data.MRData.CircuitTable.Circuits
@@ -160,12 +153,11 @@ const Circuits = () => {
 
   const yearSelectBox = <select 
     className={'year-select'}
-    value={state.filterYear}
-    // onChange={event => setFilterYear(event.target.value)}  
+    value={state.selectedSeason}
     onChange={event => filterByYear(event.target.value)}  
     >
       <option key={'empty'} disabled value={'yyyy'}>Select Year</option>
-    {activeYears.map(year => {
+    {state.seasons.map(year => {
       return <option key={year} value={year}>{year}</option>
     })}
   </select>
@@ -194,9 +186,11 @@ const Circuits = () => {
 
   return <div>
 
+    <SeasonsFilter clickHandler={(season) => filterByYear(season)} seasons={state.seasons} />
     <div className={'search-container'}>
 
-      {yearSelectBox}
+
+      {/* {yearSelectBox} */}
 
       <div className={'search-input-container'}>
         <input 
@@ -204,14 +198,14 @@ const Circuits = () => {
           placeholder='Search by name...'
           className={'search-input'}
           onChange={(event) => {
-            setFilterTerm(event.target.value)
+            dispatch({ type: 'SET_SEARCH_TERM', payload: event.target.value })
           }}
           onKeyPress={event => {
             if (event.key === 'Enter') {
-              filterCircuitsByName(event.target.value)
+              filterCircuitsByName(state.searchTerm)
             }
           }}
-          value={filterTerm}
+          value={state.searchTerm}
         />
         <span className="material-icons">search</span>
       </div>

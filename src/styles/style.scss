@@ -406,6 +406,28 @@ tr > td {
   font-size: 18px;
 }
 
+.seasons-filter-container {
+  display: flex;
+  flex-direction: row;
+  background-color: #f8f8f8;
+  overflow-x: scroll;
+}
+
+.seasons-filter-container > ul {
+  display: flex;
+  flex-direction: row;
+}
+
+.seasons-filter-container > ul > li {
+  white-space: nowrap;
+  padding: 10px 16px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.seasons-filter-container > ul > li:hover {
+  color: #32bebe;
+}
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) { 
