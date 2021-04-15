@@ -151,6 +151,7 @@ const Circuits = () => {
     })
   }
 
+
   const yearSelectBox = <select 
     className={'year-select'}
     value={state.selectedSeason}
