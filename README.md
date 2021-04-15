@@ -18,6 +18,8 @@ Try it out [here](https://jamesnicholasryan.github.io/F1data/)!
 
 ## Technologies used
 - JavaScript
+- React
+- REST APIs
 - HTML5
 - CSS
 - React-MapGL
