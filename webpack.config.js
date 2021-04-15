@@ -8,6 +8,8 @@ const env = process.env.NODE_ENV === 'production' ? (
   new Dotenv()
 )
 
+console.log(__dirname)
+
 module.exports = webpackEnv => {
   const publicPath = webpackEnv.NODE_ENV === 'local' ? {
     publicPath: '/'
@@ -46,7 +48,9 @@ module.exports = webpackEnv => {
       historyApiFallback: true
     },
     plugins: [
-      new Dotenv(),
+      new Dotenv({
+        path: path.resolve(__dirname, '../.env')
+      }),
       new webpack.HotModuleReplacementPlugin(),
       new HtmlWebpackPlugin({
         template: 'src/index.html',

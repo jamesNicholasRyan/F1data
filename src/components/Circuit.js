@@ -6,7 +6,10 @@ import { RadialChart, VerticalBarSeries, XYPlot, XAxis, YAxis } from 'react-vis'
 import Adelaide from '../assets/circuitMaps/adelaide.svg'
 import Mugello from '../assets/circuitMaps/mugello.svg'
 import Silverstone from '../assets/circuitMaps/silverstone.png'
+import getCircuitMaps from '../utils/getCircuitMaps'
 import greyFlag from '../assets/grey_flag.png'
+
+const circuitMaps = getCircuitMaps()
 
 const Circuit = ( { match } ) => {
 
@@ -86,7 +89,9 @@ const Circuit = ( { match } ) => {
   useEffect(() => {
     const updatedMapConfig = {
       height: '400px',
-      width: '800px',
+      // width: window.innerWidth > 360 ? 360 : window.innerWidth,
+      width: window.innerWidth < 600 ? window.innerWidth - 20 : 600,
+      maxWidth: '600px',
       zoom: 14,
     }
     updatedMapConfig.latitude = Number(circuit.Location.lat)
@@ -216,18 +221,23 @@ const Circuit = ( { match } ) => {
     <div className={'container'}>
 
       <div className={'container-left-column'}>
+        
         <div className={'circuitInfo'}>
           <div className={'circuit-info-text'}>
             <h1><a href={circuit.url} target='_blank'>{circuit.circuitName}</a></h1>
-            <div>{circuit.Location.locality} - {circuit.Location.country}</div>
-            {/* <img width='400' height='200' style={ {backgroundColor: 'grey'} } src={Adelaide}></img> */}
-            {/* <img height='200' style={ {marginTop: '10'} }src={Mugello}></img> */}
-            <img height='200' style={ {marginTop: '10'} }src={'https://i.imgur.com/rQoBU4O.png'}></img>
+            <div className={'location'}>
+              <span>
+                <img width='50' className='circuit-flag' src={flag}></img>
+              </span>
+              {circuit.Location.locality} - {circuit.Location.country}</div>
           </div>
-          <img width='200' className='circuit-flag' src={flag}></img>
+
+          <div className={'circuit-image-container'}>
+            <img src={circuitMaps[circuit.circuitId]} className={'circuit-image'}></img>
+          </div>
         </div>
 
-      {map}
+        {map}
 
         <div className='seasons-title'>SEASONS:</div>
         <div className='tag-container'>
@@ -245,9 +255,8 @@ const Circuit = ( { match } ) => {
 
       {/* --------------------------- RESULTS TABLE HERE ------------------------------------ */}
         <div className='info-container'>  
+          {raceInfoJSX}
           <div className='table-container'>
-            {raceInfoJSX}
-
             {table}
           </div>          
         </div>
