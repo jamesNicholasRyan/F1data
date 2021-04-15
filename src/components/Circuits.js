@@ -41,6 +41,7 @@ const Circuits = () => {
   }, [filterYear])
 
   function filterByYear(){
+    console.log('filtering by year')
     if (filterYear === 'yyyy') {
       return setFilteredCircuits(circuits)
     }
@@ -59,8 +60,15 @@ const Circuits = () => {
       return circuit.circuitName.toLowerCase().includes(filterTerm.toLowerCase())
     })
     setFilteredCircuits(filtered)
-
+    mapConfig = {
+      height: '100vh',
+      width: '100vw',
+      zoom: 4.5,
+      latitude: 51.515,
+      longitude: -0.078
+    }
   }
+
 
   const yearSelectBox = <select 
     className={'year-select'}

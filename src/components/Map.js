@@ -12,12 +12,15 @@ const Map = (props) => {
     fontSize: '12px'
   }
   let markers = ''
+
   useEffect(() => {
     setMarkerData(props.data)
   }, [viewPort])
-  
+
   if (props.data) {
     markers = props.data.map((circuit, i) => {
+      // console.log(circuit.circuitName)
+      // console.log(circuit.Location.lat, circuit.Location.long)
       const latLong = {
         lat: Number(circuit.Location.lat),
         long: Number(circuit.Location.long)
@@ -39,6 +42,7 @@ const Map = (props) => {
     mapboxApiAccessToken={process.env.MAPBOX_TOKEN}
     mapStyle="mapbox://styles/mapbox/dark-v9"
   >
+    {/* {markers} */}
     { viewPort.zoom > 4 ? markers : null }
   </MapGL>
 }
