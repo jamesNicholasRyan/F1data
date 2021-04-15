@@ -1,235 +1,201 @@
-### ![GA](https://cloud.githubusercontent.com/assets/40461/8183776/469f976e-1432-11e5-8199-6ac91363302b.png) General Assembly - Software Engineering Immersive
+### ![GA](https://cloud.githubusercontent.com/assets/40461/8183776/469f976e-1432-11e5-8199-6ac91363302b.png) General Assembly, Software Engineering Immersive
 
-# GA Project 2 - Circuit Mapper
+# F1 CIRCUIT MAPPER
 
 ## Overview
+This was a two day pair project, where we were tasked with picking an existing API and implementing it into our own website. My partner and I decided to go with an F1 motorsports API, as I felt the data provided had lots of potential for great visuals. I utilised the capabilities of a REST API (GET, PUT, POST, DELETE) to create a fully functioning website that visually displayed all historical F1 Grand Prixs and their circuits.
 
-For the 2nd project at General Assembly, I teamed up with another student to deliver 'Circuit Mapper'. Circuit Mapper is a front end application that displays Formula One data in a fun, interactive way. The project was built in just 2 days, and applies the React Hooks and API skills we had been working on in the weeks prior. Users are able to navigate a map to see various circuits, and then check the details of each circuit to see results at a specific track over the course of a number of years.
+Try it out [here](https://jamesnicholasryan.github.io/F1data/)!
 
-You can access the live project [here](https://srosser2.github.io/GA02-F1CircuitMapper/#/F1data/).
-
-![](https://imgur.com/ImzXKmT.jpg)
-​
 ## Brief
-​
-The app had the following requirements:
 
-* **Consume a public API** – this could be anything, but it must make sense for your project.
-* **Have several components**
+* **Consume a public API** – this could be anything but it must make sense for your project.
+* **Have several components** - At least one classical and one functional.
 * **The app should include a router** - with several "pages".
 * **Include wireframes** - that you designed before building the app.
 * Have **semantically clean HTML** - you make sure you write HTML that makes structural sense rather than thinking about how it might look, which is the job of CSS.
 * **Be deployed online** and accessible to the public.
 
-
-## Technologies Used
-
-- HTML
-- CSS
+## Technologies used
 - JavaScript
-- React Hooks
-- React Router
-- Map GL
-- Insomnia
-- InVision
+- HTML5
+- CSS
+- React-MapGL
 - Git
 - GitHub
 
+# Approach
 
-## Approach
+## Plan
+After finding an API that I liked - the F1 data API provided lots of interesting stats which I felt could be visualised in different ways - I went about planning our approach. I decided the focus of the site was going to be on the circuits of the various Gran Prixs. At the forefront of the project was the map component, which would display all the locations of these circuits. The user then has option to select/click on a circuit, where they are then taken to a single circuit page which deisplays even more detailed information about that Gran Prix.
 
-### Planning
+We had 2 days to complete this task. I divided our time/focus on the map component, and the single circuit pages. 
 
-My teammate came up with the concept after discovering the [Ergast API](https://ergast.com/mrd/). We both reviewed the endpoints using the Insomnia API Client to see what kind of data we could get from the API and how we could visualize it in an interesting way. I suggested using InVision to create  wireframes, which made collaborative whiteboarding easy. 
 
-![](https://imgur.com/rxXid2m.png)
+## The Map
+The crux of the map page was the interactive map that would allow the user to view all F1 circuits in the API. I also felt it was important to allow them to see the cuircuits in list format too. I intended to add some search functioanlity as well, searching by season/year and circuit name. 
 
-Once we had a good idea of the features, we prioritised each feature, and then split the tasks between us. 
-
-For this project, we used the 'Live Share' VS Code extension that allows collaborative coding directly inside another user's text editor. The remote user has to connect to the host's computer, and from there you edit the same files. We had not used Git collaboratively at this point, so this was the easiest and quickest solution to get started. Given the short timeframe of the project, this approach worked fine. 
-
-### Delivery
-
-#### The Map Component
-
-My main responsibility in this project was to deliver the map component, the key requirements of which were:
-
-- Display a marker for each circuit at the correct location
-- Display the tracks name on the marker
-- Search for tracks by the name
-- Select a year and display only the circuits for that particular year.
-
-I knew the API had data had a latitude and longitude for each track, and this could be used as input for Map GL.
-
-When tackling this problem I broke the task down into the following steps, and manually tested at each point:
-
-1. Get the API data and save it in state
-2. Get the map component to render on the screen
-3. Get a marker to appear at a single location on the map using static coordinates
-4. Pass API data to make a marker render with the track name
-5. Pass all API data to make multiple markers render with track names
-6. Add a link to each marker to navigate the user to the correct track
-7. Create a text input to filter tracks by name
-8. Create a select input to filter tracks by year
-
-Mapbox GL has a few React friendly wrappers, so it was easy to get started. Initially, I used React MapBox GL ([https://www.npmjs.com/package/react-mapbox-gl](https://www.npmjs.com/package/react-mapbox-gl)) for the map component, however after spending some time on working with markers, I found it easier to use a slightly different implementation of the Map GL API from the react-map-gl package ([https://www.npmjs.com/package/react-map-gl](https://www.npmjs.com/package/react-map-gl)). 
-
+The first task was to 'fetch' the data from the API - something that was important for almost every page of this site. I really enjoyed using this API. It had many features which allowed us to taylor the response to our needs. We could specifc the limit to be 78, allowing us to pull all available circutis. 
+```js
+useEffect(() => {
+  fetch('https://ergast.com/api/f1/circuits.json?limit=78')
+    .then((resp) => resp.json())
+    .then((data) => {
+      setCircuits(data.MRData.CircuitTable.Circuits)
+      setFilteredCircuits(data.MRData.CircuitTable.Circuits)
+    })
+}, [])
 ```
 
-import React, { useEffect, useState } from 'react'
-import mapboxgl from 'mapbox-gl';
-import MapGL, { Marker } from 'react-map-gl'
-import markerIcon from '../assets/location-icon.png'
-import { Link } from 'react-router-dom'
+The API also allowed for various search functionality:
+```js
+useEffect(() => {
+  filterByYear()
+}, [filterYear])
 
-const Map = (props) => {
+function filterByYear(){
+  if (filterYear === 'yyyy') {
+    return setFilteredCircuits(circuits)
+  }
+  fetch(`https://ergast.com/api/f1/${filterYear}/circuits.json`)
+    .then((resp) => resp.json())
+    .then((data) => {
+      setFilteredCircuits(data.MRData.CircuitTable.Circuits)
+    })
+}
+```
 
-  const [viewPort, setViewPort] = useState(props.config)
-  const [markerData, setMarkerData] = useState([])
+To toggle between the map or list of cards, I implemented this code. In hindisght, It may be more desirable to write this as a ternary: 
+```js
+if (showMap) {
+  body = <div id={'map-container'}>
+    <Map config={mapConfig} data={filteredCircuits}/>
+  </div>
+} else {
+  body = <div className={'card-container'}>
+    {filteredCircuits.map((circuit) => {
+      return <Card key={circuit.circuitId} circuit={circuit} />
+    })}
+  </div>
+}
+```
 
-  const markerLabelStyle = {
-    display: 'block',
-    fontSize: '12px'
+As mentioned above, the API provided lots of useful information on each circuit. By pulling the latitude and longitude for each circuit, I was able to place these onto the map using React-MapGL's built in marker system:
+```js
+markers = props.data.map((circuit, i) => {
+  const latLong = {
+    lat: Number(circuit.Location.lat),
+    long: Number(circuit.Location.long)
   }
 
-  let markers = ''
+  return <Marker key={i} latitude={latLong.lat} longitude={latLong.long}>
+    <Link to={`/F1data/circuits/${circuit.circuitId}`}>
+      <div className={'markerInner'}>
+        <p id={circuit.circuitId} style={markerLabelStyle}>{circuit.circuitName}</p>
+      </div>
+    </Link>
+  </Marker>
+})
+```
 
-  useEffect(() => {
-    setMarkerData(props.data)
-  }, [viewPort])
+## The Circuits
+Each marker on the map contained a Link, which would take the user to that specific circuit page. 
 
-  if (props.data) {
-    markers = props.data.map((circuit, i) => {
-      const latLong = {
-        lat: Number(circuit.Location.lat),
-        long: Number(circuit.Location.long)
-      }
+Each circuit page has lots of moving parts display various data points and information about the Gran Prix:
+- Smaller Map showing the specific location of the circuit
+- Flag of the country the circuit is in
+- Details, such as name and location
+- Circuit layout image
+- Season/year filter
+- table of results
+- Nationality chart
+
+Most of this information was contained within the main F1 API that we were using, however, this API did not contain any info on the flags. I utilised Rest Countries API for that.
+
+Here are some of the fetches made on this page. 
+```js
+useEffect(() => {
+  fetch(`https://ergast.com/api/f1/circuits/${match.params.id}.json`)
+    .then(resp => resp.json())
+    .then(data => {
+      const circuitObj = data.MRData.CircuitTable.Circuits[0]
+      setCircuit(circuitObj)
+      setLoading(false)
+    })
   
-      return <Marker key={i} latitude={latLong.lat} longitude={latLong.long}>
-        <Link to={`/F1data/circuits/${circuit.circuitId}`}>
-          <div className={'markerInner'}>
-            <p id={circuit.circuitId} style={markerLabelStyle}>{circuit.circuitName}</p>
-          </div>
-        </Link>
-      </Marker>
-    })
-  }
-
-  return <MapGL
-    { ...viewPort }
-    onViewportChange={(viewPort) => setViewPort(viewPort)}
-    mapboxApiAccessToken={process.env.MAPBOX_TOKEN}
-    mapStyle="mapbox://styles/mapbox/dark-v9"
-  >
-    { viewPort.zoom > 4 ? markers : null }
-
-  </MapGL>
-
-}
-
-```
-
-
-
-
-#### The Table Component
-
-The map detail page contains a table component that displays race results based on the year that the user selects. 
-
-The table takes data as a prop, and a config array representing each column, which allows the table to map the correct data to the correct column for each row of data. This approach made it easy to organize the table and add or remove columns to display easily. 
-
-
-```
-import React, { useEffect, useState } from 'react'
-
-const Table = (props) => {
-
-  const config = [
-    {
-      header: 'Position',
-      dataKey: 'position',
-      width: '80px'
-    },
-    {
-      header: 'Driver',
-      dataKey: 'driver',
-      width: '240px'
-    },
-    {
-      header: 'Constructor',
-      dataKey: 'constructor',
-      width: '200px'
-    }
-    // ...
-  ] 
-
-  const columns = config.map((column, i) => {
-    const style = {
-      width: column.width
-    }
-    return <th className='tablecontents' key={i} style={style}>{column.header}</th>
+  fetch(`https://ergast.com/api/f1/circuits/${match.params.id}/seasons.json?limit=100`)
+    .then(resp => resp.json())
+    .then(data => {
+        const seasonArr = data.MRData.SeasonTable.Seasons
+        setSeasonList(seasonArr)
   })
-
-  const rows = props.data.map((rowData, i) => {
-    const cells = Object.keys(rowData) // ['position', 'time']
-    const rowCells = cells.map((cell, j) => {
-
-      return <td className='tablecontents' key={j} style={{ borderRadius: '3', backgroundColor: 'white' }}>{rowData[cell]}</td>
-    })
-    return <tr key={i}>
-      {rowCells}
-    </tr>
-  })
-
-
-
-  return <table>
-    <thead>
-      <tr>
-        {columns}
-      </tr>
-    </thead>
-    <tbody>
-      {rows}
-    </tbody>
-
-  </table>
-}
-
-export default Table
-
+}, [])
 ```
 
-### Other Contributions
+To display the results data, I decided to use vanilla HTML table. This allowed for a lot of freedom when it came to adding in extra things. For example, I was keen to implentment the flags of each drivers country, and display their position change over the race. Below is how I built the data for the table. I used Material Icons for the position change indicators:
+```js
+const race = data.MRData.RaceTable.Races[0]
+if (race) {
+  const raceResults = race.Results.map(result => {
+    let time =  ''
+    if (result.status === 'Finished') {
+      time = result.Time.time
+    } else if (result.status[0] !== '+') {
+      time = 'DNF'
+    } else {
+      time = result.status
+    }
+    const positionChange = (result.grid) - (result.position)
+    let changeArrow = '' 
+    if (positionChange > 0) {
+      changeArrow = <span className="material-icons" style={{ color: 'green'}}>keyboard_arrow_up</span>
+    } else if (positionChange < 0) {
+      changeArrow = <span className="material-icons" style={{ color: 'red'}}>keyboard_arrow_down</span>
+    } else if (positionChange === 0) {
+      changeArrow = <span className="material-icons">horizontal_rule</span>
+    }
+    const filteredCountry = allCountries.find((country) => {
+      return country.demonym === result.Driver.nationality
+    })
+    const flag = <img width='30' src={filteredCountry.flag} alt={result.Driver.nationality}></img>
+    return {
+      position: result.position,
+      driver: `${result.Driver.givenName} ${result.Driver.familyName}`,
+      constructor: result.Constructor.name, 
+      time: time,
+      grid: result.grid,
+      positionChange: positionChange,
+      changeArrow: changeArrow,
+      nationality: result.Driver.nationality,
+      flag: flag,
+    }
+  })
+```
 
-- The card view of tracks
-- Styling CSS in the nav bar, map, card view
-- Configuring Webpack to use file loader and svg loader.
 
 
-## Known Bugs
-
-- There is a strange behaviour when searching, where the labels for each track on the map updates to an incorrect track. The user has to zoom out and then back in to see the correct track name at the correct location.
-- Due to time constraints, we did not have time to put in the SVG for each track on each page.
-- When filtering race results on a specific circuit page, there is an error where the flag can't be matched to a specific driver as the driver data doesn't match the country API data correctly.
-
-## Wins
-
-- This was the first time I had used Map GL and really enjoyed how quick it is to get started with and get good results.
-- This was the first project using React Hooks. I have used React with class-based components, so it took some time getting used to doing things with Hooks. 
-
-
-## Challenges
-
-- The image import method using Webpack made it difficult to import the correct track image to the circuit detail page dynamically. Although we got this to work, we did not have time to change it for all tracks.
-- We tried out some component libraries (RSuite), but due to the limited amount of time and learning curve to get things started, we decided to create components ourselves. Given more time to learn the libraries, we would have opted to use something like RSuite or Material UI.
+# Conclusion
 
 ## Key Learnings
+This was my first opportunity to work on a project that utilised a public API for the main source of content for a website. It was a great opportunity to learn about APIs and how to work with different data types. I found it interesting working out what kind of data the API would return from each request. I quickly learned, that by reading API docs one can plan for these situations, saving a lot of time in development. 
 
-- It takes time to learn libraries, and can be easier to implement something yourself if time is limited.
+This project was also the first chance I had at applying my new knowledge of the React framework. Once I was pas the initial learning curve, I found the framework to be very efficient at creating SPAs. The framework allows you to create very succinct and neat code, owing to the component aspect of the Reacts file system. 
 
-## Future Improvements
+I implemented a few external libraries for this site, the main one being MapGL. Learning how to integrate these with React had its own learning curve, however, once that hurdle was overcome the potential for creating interesting visuals and an interactive website is exciting.
 
-- Add the correct track image to each circuit.
-- Fix the map functionality so that the correct label shows on the map when the user filters the data via search.
-- Add testing to the components.
+## Challenges
+When fetching the flags from the Rest Countries API I encountered a small issue. I was using the F1 data 'country' value for each circuit, where 'United Kingdom' was listed as 'UK'. The countries API would read the 'UK' query as 'Ukraine' and returned the wrong flag. A similar issue was occuring for 'South Korea'. To ammend this, I hard coded in some checks before sending the request to the countries API. This isn't a perfect solution - somewhat of a 'hack' - however, due to the time constraints it was an ideal work around for the situation:
+```js
+  let country = circuit.Location.country
+  if (country === 'UK') {
+    country = 'united kingdom'
+  } if (country === 'Korea') {
+    country = 'Korea (Republic of)'
+  }
+```
+
+Throughout the project, I didn't use any CSS frameworks to help with visual fidelity. Although this grants lots of freedom to do some interesting things, because of the nature of the task and the small time frame we had to create it, in hindsight it may have been wise to ustilise a simple framework. 
+
+## Screenshots
+![](https://i.imgur.com/8Q2rO07.png)
+![](https://i.imgur.com/C6itr2m.png)

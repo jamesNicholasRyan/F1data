@@ -33,8 +33,6 @@ const Circuit = ( { match } ) => {
   const [flag, setFlag] = useState([])
   const [seasonList, setSeasonList] = useState([])
   const [results, setResults] = useState([])
-  // const [map, setMap] = useState('')
-
   const [loading, setLoading] = useState(true)
   const [pieData, setPieData] = useState([])
   const [isTooltipShown, updateTooltip] = useState(false)
@@ -43,9 +41,6 @@ const Circuit = ( { match } ) => {
   const [flags, setFlags] = useState([])
   const [allCountries, setCountries] = useState([])
   const circuitName = match.params.id
-
-  // const [circuitMap, setCircuitMap] = useState('../assets/circuitMaps/mugello.svg')
-
 
   useEffect(() => {
     fetch(`https://ergast.com/api/f1/circuits/${match.params.id}.json`)
@@ -64,7 +59,7 @@ const Circuit = ( { match } ) => {
     })
   }, [])
 
-   // ---------------------------- FETCHING COUNTRY FLAG ----------------------------------------------- //
+  // ---------------------------- FETCHING COUNTRY FLAG ----------------------------------------------- //
 
   useEffect(() => {
     let country = circuit.Location.country
