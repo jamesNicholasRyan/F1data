@@ -10,6 +10,7 @@ import Silverstone from '../assets/circuitMaps/silverstone.png'
 import getCircuitMaps from '../utils/getCircuitMaps'
 import greyFlag from '../assets/grey_flag.png'
 import LapTimes from './LapTimes'
+import ScaleLoader from 'react-spinners/ScaleLoader'
 
 const circuitMaps = getCircuitMaps()
 
@@ -47,7 +48,7 @@ const Circuit = ( { match } ) => {
   const [allCountries, setCountries] = useState([])
   const [lapData, setLapData] = useState([])
   const circuitName = match.params.id
-  const [lapToggle, toggleLaps] = useState(false)
+  const [lapIsLoading, setLapLoading] = useState(false)
 
   useEffect(() => {
     fetch(`https://ergast.com/api/f1/circuits/${match.params.id}.json`)
@@ -103,8 +104,8 @@ const Circuit = ( { match } ) => {
     setMapConfig(updatedMapConfig)
   }, [circuit])
 
+
   function fetchRace(year) {
-    toggleLaps(true)
     fetch(`https://ergast.com/api/f1/${year}/circuits/${circuit.circuitId}/results.json`)
     .then(resp => resp.json())
     .then(data => {
@@ -193,33 +194,42 @@ const Circuit = ( { match } ) => {
       }
 
       // --------------------- CREATING LAPTIMES DATA ---------------------------------------- //
+
       const round = data.MRData.RaceTable.Races[0].round
       const driverList = race.Results.map((driver) => {
         return driver.Driver.driverId
       })
-      let newLapData = []
+
+      async function fecthLapTimes(driver) {
+        setLapLoading(true)
+        const response = await fetch(`https://ergast.com/api/f1/${year}/${round}/drivers/${driver}/laps.json`)
+        const laps = await response.json()
+        return laps
+      }
+      setLapData([])
+      // console.log('fetching data')
       driverList.forEach((driver) => {
-        fetch(`https://ergast.com/api/f1/${year}/${round}/drivers/${driver}/laps.json`)
-          .then(resp => resp.json())
-          .then(data => {
-            // console.log(data.MRData.RaceTable.Races[0].Laps)
-            const laps = data.MRData.RaceTable.Races[0].Laps
-            const newTimings = laps.map((lap) => {
-              return { 
-                x: Number(lap.number), 
-                // y: lap.Timings[0].time
-                y: convertTime(lap.Timings[0].time)
-              }
-            })
-            const driverData = { driver: driver, lapTimes: newTimings }
-            newLapData.push(driverData)
+        fecthLapTimes(driver).then(lapData => {
+          // console.log(data.MRData.RaceTable.Races[0].Laps)
+          const driverLaps = lapData.MRData.RaceTable.Races[0].Laps
+          const newTimings = driverLaps.map((lap) => {
+            return { 
+              x: Number(lap.number), 
+              // y: lap.Timings[0].time
+              y: convertTime(lap.Timings[0].time)
+            }
           })
+          const driverData = { driver: driver, lapTimes: newTimings }
+          setLapData(oldArray => [...oldArray, driverData])
         })
-        setLapData(newLapData)
-        // console.log(newLapData)
+    
+      })
+      // console.log('finished')
+      // setLapLoading(false)
     })
 
   }
+
 
   function convertTime(time) {
     const colonSplit = time.split(':')
@@ -256,6 +266,7 @@ const Circuit = ( { match } ) => {
     times = <div className='lapTimes-container'>
       <LapTimes
         data={lapData}
+        setLapLoading={setLapLoading}
       />
     </div>
   }
@@ -337,10 +348,19 @@ const Circuit = ( { match } ) => {
             </div>
           </div>
 
-          {lapToggle && <div className='chart-container'>
+          <div className='chart-container'>
+            {/* <div className='spinner-container'>
+              <ScaleLoader 
+                className='spinner'
+                color={'blue'} 
+                loading={lapIsLoading} 
+                size={100} 
+                style={{zIndex: '1'}}  
+              />
+            </div> */}
             {times}
-          </div>}
-          
+          </div>
+        
         </div>
         
       </div>
