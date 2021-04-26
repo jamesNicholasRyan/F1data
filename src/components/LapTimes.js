@@ -7,15 +7,15 @@ const LapTimes = (props) => {
   const [positionY, updateY] = useState(0)
   const [isTooltipShown, updateTooltip] = useState(false)
   const [driverName, setDriverName] = useState('')
-  const [mouseX, setMouseX] = useState('')
-  const [mouseY, setMouseY] = useState('')
   const [hoveredPoint, setHoveredPoint] = useState({
     x: Number,
     y: Number
   })
+  const [lapMedium, setLapMedium] = useState('')
   let counterR = "255"
   let counterG = "190"
   let counterB = "0"
+
 
   function findDataLimits() {
     const lapData = lineData.map((driver) => {
@@ -30,10 +30,17 @@ const LapTimes = (props) => {
     const merged2 = [].concat.apply([], yData)
     const min = Math.min(...merged2)
     const max = Math.max(...merged2)
-    return [max, min]
+    const medium = min + ((max - min) * 0.4)
+    useEffect(() => {
+      setLapMedium(parseInt(medium))
+    }, [medium])
+    return [medium, min]
   }
 
+  console.log(lapMedium)
+
   useEffect(() => {
+    // console.log(props.data)
     setLineData(props.data)
   }, [props.data])
 
@@ -59,13 +66,19 @@ const LapTimes = (props) => {
     } else {
       seconds = split[0] - 120
     }
-    const milliseconds = split[1]
+    let milliseconds
+    if (split[1]) {
+      milliseconds = split[1].slice(0,3)
+    } else {
+      milliseconds = '+'
+    }
     return `${minutes}:${seconds}.${milliseconds}`
   }
 
   return <div>
+    <div className='lapTimes-title'>LAP TIMES:</div>
     <XYPlot 
-      width={800} 
+      width={800}
       height={600}
       yDomain={findDataLimits()} 
     >
@@ -75,7 +88,18 @@ const LapTimes = (props) => {
       <YAxis title="Lap Time" />
 
       {lineData.map((driver, index) => {
-        const lapTimes = driver['lapTimes']
+        const lapTimes = driver['lapTimes'].map((times) => {
+          let newY = 0
+          if (times.y > lapMedium) {
+            newY = lapMedium
+          } else {
+            newY = times.y
+          }
+          const newTimes = {...times, y: newY}
+          console.log(newTimes)
+          return newTimes
+        })
+
         counterR = String(parseInt(counterR)-10)
         counterG = String(parseInt(counterG)-10)
           return <LineMarkSeries

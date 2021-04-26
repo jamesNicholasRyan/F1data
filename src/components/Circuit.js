@@ -47,6 +47,7 @@ const Circuit = ( { match } ) => {
   const [flags, setFlags] = useState([])
   const [allCountries, setCountries] = useState([])
   const [lapData, setLapData] = useState([])
+  const [lapDataLoaded, toggleLapDataLoaded] = useState(false)
   const circuitName = match.params.id
   const [lapIsLoading, setLapLoading] = useState(false)
 
@@ -201,6 +202,7 @@ const Circuit = ( { match } ) => {
       })
 
       async function fecthLapTimes(driver) {
+        toggleLapDataLoaded(true)
         setLapLoading(true)
         const response = await fetch(`https://ergast.com/api/f1/${year}/${round}/drivers/${driver}/laps.json`)
         const laps = await response.json()
@@ -321,7 +323,7 @@ const Circuit = ( { match } ) => {
         </div>
         
         <div className='chart-container'>
-          <div className='pie-container'>
+          {/* <div className='pie-container'>
             <div style={{
                 display: isPieChart ? 'block' : 'none',}}>Nationalities</div>
             <RadialChart className='pieChart'  
@@ -346,7 +348,7 @@ const Circuit = ( { match } ) => {
               >
               <div>{nationality}</div>
             </div>
-          </div>
+          </div> */}
 
           <div className='chart-container'>
             {/* <div className='spinner-container'>
@@ -358,7 +360,7 @@ const Circuit = ( { match } ) => {
                 style={{zIndex: '1'}}  
               />
             </div> */}
-            {times}
+            {lapDataLoaded && times}
           </div>
         
         </div>
