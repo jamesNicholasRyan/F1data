@@ -30,14 +30,12 @@ const LapTimes = (props) => {
     const merged2 = [].concat.apply([], yData)
     const min = Math.min(...merged2)
     const max = Math.max(...merged2)
-    const medium = min + ((max - min) * 0.4)
+    const medium = min + ((max - min) * 0.3)
     useEffect(() => {
       setLapMedium(parseInt(medium))
     }, [medium])
     return [medium, min]
   }
-
-  console.log(lapMedium)
 
   useEffect(() => {
     // console.log(props.data)
