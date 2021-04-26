@@ -105,7 +105,8 @@ const LapTimes = (props) => {
           return <LineMarkSeries
             key={index}
             data={lapTimes}
-            color={`rgb(${counterR},${counterG},${counterB})`}
+            color={`rgb(${counterB},${counterG},${counterR})`}
+            lineStyle={{opacity: '0.3'}}
             onValueMouseOut={(datapoint, event) => toggleToolTip(datapoint)}
             onValueMouseOver={(dataPoint, event) => toggleToolTip(dataPoint, event, driver.driver)}
           />
